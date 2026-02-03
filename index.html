@@ -9,8 +9,8 @@
 <meta property="og:title" content="Grammont Enterprises — Fluxo 90/10">
 <meta property="og:description" content="Fluxograma interativo do processo de captação de recursos. Cliente entra com 10%, Grammont financia 90%. Visualize todas as etapas do funding.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://www.grammontenterprises.com/logo.png">
 <meta name="description" content="Fluxograma completo do processo de empréstimos privados 90/10 da Grammont Enterprises. Todas as etapas: Intake, KYC, Financial Statement, Business Plan e Term Sheet.">
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
 
@@ -285,10 +285,12 @@
 
 flowchart TD
 
+    %% ===== INÍCIO =====
     START(["🏦 GRAMMONT ENTERPRISES<br/>Empréstimos Privados 90/10<br/>Fluxo de Captação de Recursos"])
     START --> CONTACT["📞 Contato Inicial com o Cliente<br/>— Apresentação do modelo 90/10 —<br/>Cliente entra com 10%, Grammont financia 90%"]
 
-    CONTACT --> E1_HEADER{{"⚙️ ETAPA 1: TRIAGEM & INTAKE<br/>📄 Business Intake Form 4-2025.pdf"}}
+    %% ===== ETAPA 1: TRIAGEM E INTAKE =====
+    CONTACT --> E1_HEADER{{"⚙️ ETAPA 1: TRIAGEM &amp; INTAKE<br/>📄 Business Intake Form 4-2025.pdf"}}
 
     E1_HEADER --> E1_COLLECT["📋 Coleta de Dados do Cliente:<br/>• Nome completo<br/>• Nome da empresa<br/>• Endereço da empresa<br/>• Data de início da empresa<br/>• Pontuação de crédito (3 bureaus — somente EUA)<br/>• Avaliação do imóvel a ser financiado<br/>• Valor do empréstimo solicitado<br/>• Descrição do negócio<br/>• Receita bruta mensal depositada em conta<br/>• Endereço residencial<br/>• Endereço comercial<br/>• Telefones (comercial + celular)<br/>• SSN ou cópia do passaporte<br/>• Data de nascimento<br/>• Identificação fiscal da empresa (EIN / Tax ID)<br/>• E-mail empresarial<br/>• Percentual de participação societária<br/>• Declarações de imposto dos últimos 2 anos (somente EUA)"]
 
@@ -300,7 +302,8 @@ flowchart TD
 
     E1_CHECK -- "✅ SIM" --> E1_VALIDATED["✅ Etapa 1 Validada<br/>Formulário de Intake preenchido e aprovado"]
 
-    E1_VALIDATED --> E2_HEADER{{"⚙️ ETAPA 2: COMPLIANCE & KYC<br/>📄 KYC_ApplForm.pdf"}}
+    %% ===== ETAPA 2: COMPLIANCE E KYC =====
+    E1_VALIDATED --> E2_HEADER{{"⚙️ ETAPA 2: COMPLIANCE &amp; KYC<br/>📄 KYC_ApplForm.pdf"}}
 
     E2_HEADER --> E2_TYPE{"🏢 Tipo de Solicitante?"}
 
@@ -311,6 +314,7 @@ flowchart TD
     E2_PF --> E2_VALIDATED["✅ Etapa 2 Completa<br/>KYC aprovado pela Grammont Enterprises"]
     E2_PJ --> E2_VALIDATED
 
+    %% ===== ETAPA 3: SAÚDE FINANCEIRA =====
     E2_VALIDATED --> E3_HEADER{{"⚙️ ETAPA 3: SAÚDE FINANCEIRA<br/>📄 Personal Financial Statement.pdf"}}
 
     E3_HEADER --> E3_ASSETS["💰 ATIVOS:<br/>• Caixa, Conta Corrente, Poupança<br/>• Valor de resgate de Seguro de Vida<br/>• Ações e Títulos (negociados em bolsa)<br/>• Ações e Títulos (não negociados)<br/>• Contas e Notas a Receber<br/>• Hipotecas e Contratos de propriedade<br/>• Anuidades / Previdência<br/>• Contas de Aposentadoria<br/>• Participações em empresas de capital fechado<br/>• Imóvel Residencial (principal)<br/>• Outros Imóveis<br/>• Imóveis de Temporada (Time Shares)<br/>• Petróleo e Gás<br/>• Automóveis<br/>• Bens Pessoais<br/>• Outros Ativos<br/>• Ativos mantidos fora do país"]
@@ -325,6 +329,7 @@ flowchart TD
     E3_INCOME --> E3_CALC
     E3_CALC --> E3_VALIDATED["✅ Etapa 3 Completa<br/>Declaração Financeira Pessoal finalizada"]
 
+    %% ===== ETAPA 4: PLANO DE NEGÓCIOS =====
     E3_VALIDATED --> E4_HEADER{{"⚙️ ETAPA 4: PLANO DE NEGÓCIOS<br/>📄 Modelo: redacted business plan.pdf"}}
 
     E4_HEADER --> E4_EXEC["📑 Sumário Executivo:<br/>• Descrição da empresa<br/>• Visão e missão<br/>• Problema que resolve<br/>• Solução proposta<br/>• Mercado-alvo<br/>• Vantagens competitivas<br/>• Equipe de gestão<br/>• Consultores e Assessores"]
@@ -340,6 +345,7 @@ flowchart TD
     E4_FIN --> E4_VALIDATED
     E4_CRITICAL --> E4_VALIDATED
 
+    %% ===== PACOTE DE DOCUMENTOS COMPLEMENTARES =====
     E4_VALIDATED --> DOCS_HEADER{{"📦 PACOTE DOCUMENTAL COMPLEMENTAR<br/>(Conforme Regras Operacionais — Texto)"}}
 
     DOCS_HEADER --> DOCS_LIST["📂 Documentos Adicionais Requeridos:<br/><br/>a) Duas formas de identificação válidas<br/>   (carteira de motorista + passaporte)<br/>b) Formulário de Intake ✅ (já completo)<br/>c) Declaração Financeira Pessoal ✅<br/>d) Plano de Negócios ✅<br/>e) Sumário Executivo + Biografias ✅<br/>f) Comprovação dos 10% disponíveis<br/>   (NÃO pode ser crédito ou recurso emprestado)<br/>g) 6 meses de extratos bancários<br/>   (da empresa ou pessoais, se empresa nova)<br/>h) Relatórios completos de crédito<br/>   (Equifax / Experian / TransUnion ou equivalente)<br/>i) Documentos societários +<br/>   2 anos de demonstrações financeiras (se existente)<br/>j) EIN ou Identificação Fiscal da empresa<br/>k) 2 anos de declarações de imposto<br/>   (NOAs e T1 Generals no Canadá ou equivalente)<br/>l) Nome do advogado responsável pelo empréstimo<br/>m) KYC ✅ (já completo)"]
@@ -351,6 +357,7 @@ flowchart TD
 
     DOCS_CHECK -- "✅ COMPLETA" --> CRM_PAYMENT
 
+    %% ===== PAGAMENTO CRM =====
     CRM_PAYMENT{{"💳 PAGAMENTO CRM — US$ 100,00"}}
     CRM_PAYMENT --> CRM_INFO["💰 Taxa de Ativação do CRM:<br/>• Valor: US$ 100,00 (não reembolsável)<br/>• Finalidade: Ativação no sistema CRM<br/>  para rastreamento da operação<br/>• ÚNICO custo antecipado do processo<br/>• Pagamento via Stripe"]
 
@@ -361,6 +368,7 @@ flowchart TD
 
     CRM_PAID -- "✅ SIM" --> CRM_ACTIVATED["✅ Operação Ativada no CRM<br/>Dropbox compartilhado com o cliente"]
 
+    %% ===== ETAPA 5: TERM SHEET =====
     CRM_ACTIVATED --> E5_HEADER{{"⚙️ ETAPA 5: FOLHA DE TERMOS (Term Sheet)<br/>📄 Term Sheet Redacted (1).pdf"}}
 
     E5_HEADER --> E5_TERMS["📜 TERMOS DO EMPRÉSTIMO:<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>📌 Valor do Empréstimo: (conforme solicitado)<br/>📌 Entrada (Down Payment): 10% do valor<br/>📌 Taxa de Juros: 6% (somente juros)<br/>📌 Prazo: 10 anos<br/>📌 Quitação: Pagamento balloon ao final<br/>📌 Amortização: Somente juros (Interest Only)<br/>📌 Multa por quitação antecipada: Nenhuma<br/>📌 Taxa de avaliação: N/A<br/>📌 Empresa de Títulos: N/A"]
@@ -374,6 +382,7 @@ flowchart TD
 
     E5_SIGN -- "✅ Assinado em 72h" --> ESCROW
 
+    %% ===== DEPÓSITO EM ESCROW =====
     ESCROW{{"🏛️ DEPÓSITO EM CONTA ESCROW"}}
 
     ESCROW --> ESCROW_DETAILS["🔐 Instruções de Depósito:<br/><br/>• 10% do valor do empréstimo<br/>• Via transferência bancária (wire transfer)<br/>• Destino: Conta escrow do ADVOGADO<br/>• ⚠️ OBRIGATÓRIO: deve ser a conta<br/>  escrow do advogado — caso contrário,<br/>  a operação será cancelada"]
@@ -384,6 +393,7 @@ flowchart TD
 
     ESCROW_CHECK -- "✅ SIM" --> TIMELINE_START["⏱️ CRONÔMETRO INICIADO!<br/>━━━━━━━━━━━━━━━━━━━<br/>60 a 90 dias úteis<br/>para liberação dos recursos<br/>(pode estender até 180 dias)<br/>━━━━━━━━━━━━━━━━━━━"]
 
+    %% ===== PERÍODO DE PROCESSAMENTO =====
     TIMELINE_START --> PROCESSING["🔄 PERÍODO DE PROCESSAMENTO<br/><br/>• Análise pelo credor (lender)<br/>• Diligência prévia (due diligence)<br/>• Verificações adicionais<br/><br/>⚠️ O credor pode solicitar<br/>informações complementares<br/>a qualquer momento"]
 
     PROCESSING --> ADD_INFO{"📨 O credor solicitou<br/>informações adicionais?"}
@@ -393,18 +403,22 @@ flowchart TD
 
     ADD_INFO -- "NÃO" --> FUNDING
 
+    %% ===== LIBERAÇÃO FINAL DOS RECURSOS =====
     FUNDING(["🎉 LIBERAÇÃO FINAL DOS RECURSOS<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>💰 Cliente recebe os recursos<br/>completos do credor<br/><br/>📊 Resumo das Deduções:<br/>• 4% taxa Grammont (na liberação)<br/>• 5% taxa do credor (na liberação)<br/><br/>📅 Prazo: 60–90 dias úteis<br/>após depósito em escrow<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>✅ PROCESSO CONCLUÍDO"])
 
+    %% ===== ROAD MAP VISUAL (referência) =====
     ROADMAP["📍 ROTEIRO DE CAPTAÇÃO<br/>(Road Map to Funding.pdf)<br/><br/>1️⃣ Apresentar um Projeto Viável<br/>2️⃣ Demonstrar Atividade Financeira<br/>3️⃣ Fornecer um Plano de Negócios Sólido<br/>4️⃣ Seu Compromisso (10%)<br/>5️⃣ Trabalhar com o Parceiro Certo<br/>   → Grammont Enterprises<br/>   → Até 90% sem garantia pessoal<br/>   → Aproximadamente 60 dias úteis"]
 
     START -.-> ROADMAP
 
+    %% ===== ESTILOS =====
     classDef startEnd fill:#D4A843,stroke:#8B6914,stroke-width:3px,color:#1a1a1a,font-weight:bold
     classDef etapaHeader fill:#2C3E50,stroke:#1a252f,stroke-width:2px,color:#FFFFFF,font-weight:bold
     classDef action fill:#EBF5FB,stroke:#2980B9,stroke-width:1px,color:#1a1a1a
     classDef decision fill:#FEF9E7,stroke:#F39C12,stroke-width:2px,color:#1a1a1a,font-weight:bold
     classDef success fill:#D5F5E3,stroke:#27AE60,stroke-width:2px,color:#1a1a1a,font-weight:bold
     classDef danger fill:#FADBD8,stroke:#E74C3C,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef payment fill:#F5EEF8,stroke:#8E44AD,stroke-width:2px,color:#1a1a1a,font-weight:bold
     classDef roadmap fill:#FCF3CF,stroke:#D4A843,stroke-width:2px,color:#1a1a1a,font-style:italic
 
     class START,FUNDING startEnd
@@ -431,19 +445,19 @@ flowchart TD
 
 <script>
   // ── STATE ──
-  let scale = 1;
-  let panX = 0, panY = 0;
-  let isDragging = false;
-  let startX, startY;
-  const MIN_SCALE = 0.05;
-  const MAX_SCALE = 4;
-  const ZOOM_STEP = 0.15;
+  var scale = 1;
+  var panX = 0, panY = 0;
+  var isDragging = false;
+  var startX, startY;
+  var MIN_SCALE = 0.05;
+  var MAX_SCALE = 4;
+  var ZOOM_STEP = 0.15;
 
-  const container = document.getElementById('canvasContainer');
-  const inner = document.getElementById('canvasInner');
-  const zoomDisplay = document.getElementById('zoomLevel');
+  var container = document.getElementById('canvasContainer');
+  var inner = document.getElementById('canvasInner');
+  var zoomDisplay = document.getElementById('zoomLevel');
 
-  // ── INIT MERMAID — curve linear para setas retas e angulares ──
+  // ── INIT MERMAID — curve linear para setas retas ──
   mermaid.initialize({
     startOnLoad: true,
     theme: 'base',
@@ -565,6 +579,44 @@ flowchart TD
     applyTransform();
   }, { passive: false });
 
+  // ── PINCH ZOOM (mobile) ──
+  var lastPinchDist = 0;
+  container.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) {
+      isDragging = false;
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastPinchDist = Math.sqrt(dx * dx + dy * dy);
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 2) {
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (lastPinchDist > 0) {
+        var ratio = dist / lastPinchDist;
+        var midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        var midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        var rect = container.getBoundingClientRect();
+        var cx = midX - rect.left;
+        var cy = midY - rect.top;
+        var prevScale = scale;
+        scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale * ratio));
+        var r = scale / prevScale;
+        panX = cx - r * (cx - panX);
+        panY = cy - r * (cy - panY);
+        applyTransform();
+      }
+      lastPinchDist = dist;
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchend', function(e) {
+    if (e.touches.length < 2) lastPinchDist = 0;
+  });
+
   // ── EXPORT PNG ──
   function exportPNG() {
     var svgEl = document.querySelector('#mermaid-output svg');
@@ -576,12 +628,10 @@ flowchart TD
     svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
-    // Embutir fonte genérica para garantir renderização correta
     var styleEl = document.createElementNS('http://www.w3.org/2000/svg', 'style');
     styleEl.textContent = '* { font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }';
     svgClone.insertBefore(styleEl, svgClone.firstChild);
 
-    // Garantir que foreignObject tenha background branco
     var foreignObjects = svgClone.querySelectorAll('foreignObject');
     foreignObjects.forEach(function(fo) {
       var divs = fo.querySelectorAll('div');
