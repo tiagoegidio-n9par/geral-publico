@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Grammont Enterprises — Fluxo de Captação de Recursos 90/10</title>
 
 <!-- Open Graph — Preview no WhatsApp / Redes Sociais -->
@@ -142,6 +142,8 @@
     top: 72px; left: 0; right: 0; bottom: 0;
     overflow: hidden;
     cursor: grab;
+    touch-action: none;
+    -ms-touch-action: none;
     background:
       radial-gradient(circle at 20% 30%, rgba(212,168,67,0.03) 0%, transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(212,168,67,0.02) 0%, transparent 50%),
@@ -438,7 +440,7 @@ flowchart TD
 <div class="toast" id="toast"></div>
 
 <!-- HINT + VERSION -->
-<div class="hint">v2.1 · 03.02.2026 &nbsp;|&nbsp; Arraste para mover · Scroll para zoom · Botões no topo para controle</div>
+<div class="hint">v2.2 · 03.02.2026 &nbsp;|&nbsp; Arraste para mover · Scroll para zoom · Botões no topo para controle</div>
 
 <!-- MERMAID CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
@@ -550,14 +552,19 @@ flowchart TD
       startX = e.touches[0].clientX - panX;
       startY = e.touches[0].clientY - panY;
     }
-  }, { passive: true });
+    if (e.touches.length >= 2) {
+      e.preventDefault();
+    }
+  }, { passive: false });
 
   container.addEventListener('touchmove', function(e) {
-    if (!isDragging || e.touches.length !== 1) return;
-    panX = e.touches[0].clientX - startX;
-    panY = e.touches[0].clientY - startY;
-    applyTransform();
-  }, { passive: true });
+    e.preventDefault();
+    if (isDragging && e.touches.length === 1) {
+      panX = e.touches[0].clientX - startX;
+      panY = e.touches[0].clientY - startY;
+      applyTransform();
+    }
+  }, { passive: false });
 
   container.addEventListener('touchend', function() { isDragging = false; });
 
@@ -583,15 +590,17 @@ flowchart TD
   var lastPinchDist = 0;
   container.addEventListener('touchstart', function(e) {
     if (e.touches.length === 2) {
+      e.preventDefault();
       isDragging = false;
       var dx = e.touches[0].clientX - e.touches[1].clientX;
       var dy = e.touches[0].clientY - e.touches[1].clientY;
       lastPinchDist = Math.sqrt(dx * dx + dy * dy);
     }
-  }, { passive: true });
+  }, { passive: false });
 
   container.addEventListener('touchmove', function(e) {
     if (e.touches.length === 2) {
+      e.preventDefault();
       var dx = e.touches[0].clientX - e.touches[1].clientX;
       var dy = e.touches[0].clientY - e.touches[1].clientY;
       var dist = Math.sqrt(dx * dx + dy * dy);
@@ -611,7 +620,7 @@ flowchart TD
       }
       lastPinchDist = dist;
     }
-  }, { passive: true });
+  }, { passive: false });
 
   container.addEventListener('touchend', function(e) {
     if (e.touches.length < 2) lastPinchDist = 0;
@@ -685,6 +694,26 @@ flowchart TD
     clearTimeout(toast._timer);
     toast._timer = setTimeout(function() { toast.classList.remove('show'); }, 3000);
   }
+
+  // ── BLOCK NATIVE ZOOM GLOBALLY ──
+  // Prevent double-tap zoom on the whole page
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e) {
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // Prevent pinch zoom on anything outside canvas (header, etc.)
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('gesturechange', function(e) {
+    e.preventDefault();
+  }, { passive: false });
 
   // ── KEYBOARD SHORTCUTS ──
   document.addEventListener('keydown', function(e) {
