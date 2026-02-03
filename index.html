@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Grammont Enterprises — Fluxo de Captação de Recursos 90/10</title>
+<title>Grammont Enterprises — Funding Process Flow 90/10</title>
 
 <!-- Open Graph — Preview no WhatsApp / Redes Sociais -->
 <meta property="og:title" content="Grammont Enterprises — Fluxo 90/10">
-<meta property="og:description" content="Fluxograma interativo do processo de captação de recursos. Cliente entra com 10%, Grammont financia 90%. Visualize todas as etapas do funding.">
+<meta property="og:description" content="Interactive flowchart of the 90/10 private loan funding process. Client puts down 10%, Grammont funds 90%. View all funding stages.">
 <meta property="og:type" content="website">
-<meta name="description" content="Fluxograma completo do processo de empréstimos privados 90/10 da Grammont Enterprises. Todas as etapas: Intake, KYC, Financial Statement, Business Plan e Term Sheet.">
+<meta name="description" content="Complete flowchart of Grammont Enterprises' 90/10 private loan process. All stages: Intake, KYC, Financial Statement, Business Plan and Term Sheet.">
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
@@ -136,6 +136,45 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ── LANGUAGE SELECTOR ── */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--gold);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .lang-btn {
+    padding: 7px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .lang-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  .lang-btn:not(.active):hover {
+    background: rgba(212,168,67,0.15);
+  }
+
+  .lang-divider {
+    width: 1.5px;
+    height: 20px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
   /* ── CANVAS ── */
   .canvas-container {
     position: fixed;
@@ -158,16 +197,23 @@
     padding: 40px;
   }
 
-  #mermaid-output {
+  .mermaid-panel {
     background: var(--white);
     border-radius: 12px;
     padding: 32px;
     box-shadow: 0 8px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,168,67,0.15);
   }
 
-  #mermaid-output svg {
+  .mermaid-panel svg {
     max-width: none !important;
     height: auto !important;
+  }
+
+  .mermaid-panel.hidden {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
   }
 
   /* ── LOADING ── */
@@ -242,11 +288,12 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
-    .header { padding: 10px 12px; }
+    .header { padding: 10px 12px; gap: 8px; }
     .header-title { font-size: 14px; }
     .header-subtitle { display: none; }
     .btn { padding: 6px 10px; font-size: 12px; }
     .btn .label { display: none; }
+    .lang-btn { padding: 6px 8px; font-size: 11px; }
   }
 </style>
 </head>
@@ -255,7 +302,7 @@
 <!-- LOADING -->
 <div class="loading-overlay" id="loading">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Renderizando fluxograma...</div>
+  <div class="loading-text" id="loadingText">Rendering flowchart...</div>
 </div>
 
 <!-- HEADER -->
@@ -264,16 +311,23 @@
     <div class="header-logo">GE</div>
     <div>
       <div class="header-title">Grammont Enterprises</div>
-      <div class="header-subtitle">Fluxo de Captação de Recursos — Empréstimos Privados 90/10</div>
+      <div class="header-subtitle" id="headerSubtitle">Private Loans 90/10 — Funding Process Flow</div>
     </div>
   </div>
   <div class="header-controls">
-    <button class="btn btn-icon" onclick="zoomOut()" title="Diminuir zoom">−</button>
+    <!-- LANGUAGE TOGGLE -->
+    <div class="lang-toggle">
+      <button class="lang-btn" id="btnEN" onclick="switchLang('en')">EN</button>
+      <div class="lang-divider"></div>
+      <button class="lang-btn" id="btnPT" onclick="switchLang('pt')">PT</button>
+    </div>
+
+    <button class="btn btn-icon" onclick="zoomOut()" title="Zoom out">−</button>
     <span class="zoom-display" id="zoomLevel">100%</span>
-    <button class="btn btn-icon" onclick="zoomIn()" title="Aumentar zoom">+</button>
-    <button class="btn btn-icon" onclick="fitToScreen()" title="Ajustar à tela">⊞</button>
-    <button class="btn btn-primary" onclick="exportPNG()" title="Baixar como imagem PNG">
-      ⬇ <span class="label">Exportar PNG</span>
+    <button class="btn btn-icon" onclick="zoomIn()" title="Zoom in">+</button>
+    <button class="btn btn-icon" onclick="fitToScreen()" title="Fit to screen">⊞</button>
+    <button class="btn btn-primary" onclick="exportPNG()">
+      ⬇ <span class="label" id="exportLabel">Export PNG</span>
     </button>
   </div>
 </header>
@@ -281,7 +335,167 @@
 <!-- CANVAS -->
 <div class="canvas-container" id="canvasContainer">
   <div class="canvas-inner" id="canvasInner">
-    <div id="mermaid-output">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- ENGLISH DIAGRAM (default) -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="diagram-en" class="mermaid-panel">
+      <pre class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#D4A843', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#B8860B', 'lineColor': '#333333', 'secondaryColor': '#f5f0e1', 'tertiaryColor': '#fff8e7', 'fontSize': '14px'}}}%%
+
+flowchart TD
+
+    %% ===== START =====
+    START(["🏦 GRAMMONT ENTERPRISES<br/>Private Loans 90/10<br/>Funding Process Flow"])
+    START --> CONTACT["📞 Initial Client Contact<br/>— Presentation of the 90/10 model —<br/>Client puts down 10%, Grammont funds 90%<br/>Only upfront fee: $100 CRM deposit"]
+
+    %% ===== STAGE 1: SCREENING & INTAKE =====
+    CONTACT --> E1_HEADER{{"⚙️ STAGE 1: SCREENING &amp; INTAKE<br/>📄 Business Intake Form 4-2025.pdf"}}
+
+    E1_HEADER --> E1_COLLECT["📋 Client Data Collection:<br/>• Client's Name<br/>• Company Name<br/>• Location Address to be Funded<br/>• Date Company Started (MM/DD/YYYY)<br/>• Credit Score from Three Bureaus (USA Only)<br/>• Appraisal for the Location Being Funded<br/>• How Much Funding Do You Need<br/>• What Does Your Business Do<br/>• Monthly Company Gross Income<br/>  Deposited in Your Bank Account<br/>• Home Address<br/>• Business Address<br/>• Business Phone #<br/>• Cell Phone #<br/>• SS# or Passport Copy<br/>• Date of Birth<br/>• Business Tax ID (EIN)<br/>• Business Email<br/>• Ownership %<br/>• Tax Returns for the last two years (USA Only)"]
+
+    E1_COLLECT --> E1_CHECK{"🔍 Critical Verification:<br/>Do you have 10%<br/>of the value of the loan?"}
+
+    E1_CHECK -- "❌ NO" --> E1_FAIL["🚫 FLOW INTERRUPTED<br/><br/>Suggest consulting services<br/>for fundraising<br/>(Grammont Policy)"]
+    E1_FAIL --> E1_RETRY["🔄 Client may return<br/>when 10% funds are available"]
+    E1_RETRY --> E1_CHECK
+
+    E1_CHECK -- "✅ YES" --> E1_VALIDATED["✅ Stage 1 Validated<br/>Intake Form completed and approved"]
+
+    %% ===== STAGE 2: COMPLIANCE & KYC =====
+    E1_VALIDATED --> E2_HEADER{{"⚙️ STAGE 2: COMPLIANCE &amp; KYC<br/>📄 KYC_ApplForm.pdf"}}
+
+    E2_HEADER --> E2_TYPE{"🏢 Applicant Type?"}
+
+    E2_TYPE -- "👤 Individual" --> E2_PF["📝 Section A — For Individuals<br/><br/>• Name of the Applicant<br/>• Father's / Spouse Name<br/>• Gender / Marital Status / Date of Birth<br/>• Nationality / Resident Status<br/>• PAN / Aadhaar Number (if applicable)<br/>• Proof of Identity submitted<br/>• Residence Address (full)<br/>• Contact Details (Tel, Mobile, Fax, Email)<br/>• Proof of Address submitted<br/>• Permanent Address (if different)<br/>• Recent passport-size photograph<br/>• Signed Declaration by Applicant"]
+
+    E2_TYPE -- "🏛️ Non-Individual (Entity)" --> E2_PJ["📝 Section B — For Non-Individuals<br/><br/>• Name of the Applicant (Entity)<br/>• Date &amp; Place of Incorporation<br/>• Date of Commencement of Business<br/>• PAN / Registration No. (e.g. CIN)<br/>• Legal Status (LLC, Corp, LLP, Trust, etc.)<br/>• Correspondence Address (full)<br/>• Contact Details (Tel, Mobile, Fax, Email)<br/>• Proof of Address submitted<br/>• Registered Address (if different)<br/>• Promoters / Partners / Directors<br/>  (names, PAN, addresses, photographs)<br/>• DIN of whole time directors<br/>• Aadhaar of Promoters/Partners (if applicable)<br/>• Signed Declaration by Authorized Signatory"]
+
+    E2_PF --> E2_VALIDATED["✅ Stage 2 Complete<br/>KYC approved by Grammont Enterprises"]
+    E2_PJ --> E2_VALIDATED
+
+    %% ===== STAGE 3: FINANCIAL HEALTH =====
+    E2_VALIDATED --> E3_HEADER{{"⚙️ STAGE 3: FINANCIAL HEALTH<br/>📄 Personal Financial Statement.pdf"}}
+
+    E3_HEADER --> E3_ASSETS["💰 ASSETS:<br/>• Cash, Checking, Savings, Money Market<br/>• Cash Value of Life Insurance<br/>• Stocks and Bonds (Publicly Traded)<br/>• Stocks and Bonds (Not Publicly Traded)<br/>• Accounts and Notes Receivable<br/>• Mortgage and Contracts for Deeds Owned<br/>• Annuities<br/>• Retirement Accounts<br/>• Closely-Held Business Interests<br/>• Real Estate — Homestead<br/>• Real Estate — Other<br/>• Real Estate — Time Shares<br/>• Oil and Gas<br/>• Automobiles<br/>• Personal Property<br/>• Other Assets<br/>• Assets Held Outside the U.S."]
+
+    E3_HEADER --> E3_LIABILITIES["📊 LIABILITIES:<br/>• Installment Loans Payable to Institutions<br/>• Installment Loans Payable to Individuals<br/>• Credit Card Debt<br/>• Lines of Credit<br/>• Income Taxes Payable<br/>• Other Taxes Payable<br/>• Mortgage on Homestead — 1st Lien<br/>• Mortgage on Homestead — 2nd Lien<br/>• Mortgages or Liens on Other Real Estate<br/>• Contracts for Deed<br/>• Other Liabilities — Partnerships<br/>• Other Liabilities — Closely Held Businesses<br/>• Other Liabilities"]
+
+    E3_ASSETS --> E3_CALC["🧮 MANDATORY CALCULATION:<br/>━━━━━━━━━━━━━━━━━━━<br/>Net Worth =<br/>Total Assets − Total Liabilities<br/>━━━━━━━━━━━━━━━━━━━"]
+    E3_LIABILITIES --> E3_CALC
+
+    E3_HEADER --> E3_INCOME["📈 INCOME:<br/>• Wages, Salary<br/>• Pensions and Annuities<br/>• Social Security Benefits<br/>• Trust Income<br/>• Other Income<br/>• Business / Real Estate Income<br/>• Sales / Rent Revenue<br/>• Operating Expenses<br/>• Sale of Assets"]
+
+    E3_INCOME --> E3_CALC
+    E3_CALC --> E3_VALIDATED["✅ Stage 3 Complete<br/>Personal Financial Statement finalized"]
+
+    %% ===== STAGE 4: BUSINESS PLAN =====
+    E3_VALIDATED --> E4_HEADER{{"⚙️ STAGE 4: BUSINESS PLAN<br/>📄 Template: redacted business plan.pdf"}}
+
+    E4_HEADER --> E4_EXEC["📑 Executive Summary:<br/>• Company Description<br/>• Vision and Mission<br/>• Problem Worth Solving<br/>• Proposed Solution<br/>• Target Market<br/>• Competitive Advantages<br/>• Management Team (CEO, COO)<br/>• Advisors and Consultants"]
+
+    E4_HEADER --> E4_OPS["🏗️ Operations:<br/>• Locations &amp; Facilities<br/>• Technology (ServiceTitan, CRM)<br/>• Marketing &amp; Sales Plan<br/>• Key Performance Indicators (KPIs)<br/>• Milestones &amp; Metrics"]
+
+    E4_HEADER --> E4_FIN["💵 Financial Plan:<br/>• Key Assumptions<br/>• Revenue by Month (projections)<br/>• Expenses by Month (projections)<br/>• Net Profit (or Loss) by Year<br/>• Gross Margin target (e.g. 42%)<br/>• EBITDA target (e.g. 25%+)"]
+
+    E4_HEADER --> E4_CRITICAL["⚠️ MANDATORY SECTIONS:<br/><br/>🔑 EXIT STRATEGY<br/>How will the loan be repaid?<br/>(e.g. PE sale, cash flow,<br/>refinancing, scaling &amp; exit)<br/><br/>🔑 USE OF FUNDS<br/>How will the 90% + 10% be spent?<br/>(acquisitions, operations, marketing,<br/>equipment, working capital)"]
+
+    E4_EXEC --> E4_VALIDATED["✅ Stage 4 Complete<br/>Business Plan approved"]
+    E4_OPS --> E4_VALIDATED
+    E4_FIN --> E4_VALIDATED
+    E4_CRITICAL --> E4_VALIDATED
+
+    %% ===== SUPPLEMENTARY DOCUMENT PACKAGE =====
+    E4_VALIDATED --> DOCS_HEADER{{"📦 SUPPLEMENTARY DOCUMENT PACKAGE<br/>(Per Operational Rules — Client Funding Process)"}}
+
+    DOCS_HEADER --> DOCS_LIST["📂 Additional Documents Required:<br/><br/>a) Two valid forms of ID<br/>   (driver's license + passport)<br/>b) Completed Intake Form ✅ (already done)<br/>c) Personal Financial Statement ✅<br/>d) Comprehensive Business Plan ✅<br/>   (with forecast financials)<br/>e) Executive Summary + Biographies ✅<br/>f) Proof of available funds for the 10% down<br/>   (CANNOT be fractional, line of credit<br/>   or borrowed funds)<br/>g) Six months of recent bank statements<br/>   (company or personal if new company)<br/>h) Full credit reports<br/>   (Equifax / Experian / TransUnion<br/>   or your country's agency — complete reports,<br/>   not just scores)<br/>i) Corporate documents (formation docs) +<br/>   2 years company financials (if existing co.)<br/>j) Company EIN or Business ID Number<br/>k) Two years of tax returns for all borrowers<br/>   (NOAs and full T1 Generals in Canada<br/>   or your country's equivalent)<br/>l) Name of the lawyer who will<br/>   process your loan<br/>m) KYC paperwork ✅ (already done)"]
+
+    DOCS_LIST --> DOCS_CHECK{"📋 Is all documentation<br/>complete?"}
+
+    DOCS_CHECK -- "❌ INCOMPLETE" --> DOCS_PENDING["⏳ Request pending<br/>documents from client<br/><br/>⚠️ The review process CANNOT<br/>begin until all required paperwork<br/>has been submitted in full"]
+    DOCS_PENDING --> DOCS_CHECK
+
+    DOCS_CHECK -- "✅ COMPLETE" --> CRM_PAYMENT
+
+    %% ===== CRM PAYMENT =====
+    CRM_PAYMENT{{"💳 CRM PAYMENT — $100.00 USD"}}
+    CRM_PAYMENT --> CRM_INFO["💰 CRM Activation Fee:<br/>• Amount: $100.00 USD (non-refundable)<br/>• Purpose: CRM activation to track<br/>  your deal in the system<br/>• ONLY upfront fee in the entire process<br/>• Payment via Stripe:<br/>  buy.stripe.com/28E28sc5scRscxc2AWcs800"]
+
+    CRM_INFO --> CRM_PAID{"💳 $100 CRM deposit<br/>processed?"}
+
+    CRM_PAID -- "❌ NO" --> CRM_WAIT["⏳ Awaiting payment<br/><br/>⚠️ Your application will NOT<br/>be finalized or submitted<br/>until the $100 CRM deposit<br/>has been successfully processed"]
+    CRM_WAIT --> CRM_PAID
+
+    CRM_PAID -- "✅ YES" --> CRM_ACTIVATED["✅ Deal Activated in CRM<br/>Dropbox shared with client"]
+
+    %% ===== STAGE 5: TERM SHEET =====
+    CRM_ACTIVATED --> E5_HEADER{{"⚙️ STAGE 5: TERM SHEET<br/>📄 Term Sheet Redacted (1).pdf"}}
+
+    E5_HEADER --> E5_TERMS["📜 LOAN TERMS:<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>📌 Loan Amount: (as requested)<br/>📌 Down Payment: 10% of loan value<br/>📌 Interest Rate: 6% (Interest Only)<br/>📌 Loan Term: 10 years<br/>📌 Repayment: Balloon payment at end of term<br/>📌 Amortization: Interest Only<br/>📌 Prepayment Penalty: None<br/>📌 Appraisal Fee: N/A<br/>📌 Title Company: N/A"]
+
+    E5_TERMS --> E5_FEES["💰 FEES (payable at funding):<br/>━━━━━━━━━━━━━━━━━━━<br/>• 4% — Grammont service fee<br/>• 5% — Lender fee<br/>━━━━━━━━━━━━━━━━━━━<br/>Total: 9% deducted at funding"]
+
+    E5_FEES --> E5_SIGN{"✍️ TERM SHEET SIGNING<br/><br/>⏰ Commitment Validity:<br/>72 HOURS to:<br/>1. Sign the Term Sheet<br/>2. Submit the 10% deposit<br/>   to escrow"}
+
+    E5_SIGN -- "❌ Not signed within 72h" --> E5_EXPIRED["🚫 TERM SHEET EXPIRED<br/>Terms and timelines are<br/>subject to change<br/><br/>Must renegotiate terms"]
+    E5_EXPIRED --> E5_HEADER
+
+    E5_SIGN -- "✅ Signed within 72h" --> ESCROW
+
+    %% ===== ESCROW DEPOSIT =====
+    ESCROW{{"🏛️ ESCROW DEPOSIT"}}
+
+    ESCROW --> ESCROW_DETAILS["🔐 Wiring Instructions:<br/><br/>• 10% of the loan amount<br/>• Via wire transfer<br/>• Destination: Attorney's escrow account<br/>• ⚠️ MANDATORY: Funds MUST be wired<br/>  to the lawyer's escrow account —<br/>  otherwise it will be a dead deal"]
+
+    ESCROW_DETAILS --> ESCROW_CHECK{"💰 10% deposit received<br/>in attorney's escrow<br/>account?"}
+
+    ESCROW_CHECK -- "❌ NO" --> ESCROW_DEAD["☠️ DEAL CANCELLED<br/><br/>Funds MUST be in the<br/>attorney's escrow account.<br/>No exceptions."]
+
+    ESCROW_CHECK -- "✅ YES" --> TIMELINE_START["⏱️ CLOCK STARTS!<br/>━━━━━━━━━━━━━━━━━━━<br/>60 to 90 business days<br/>to full funding<br/>(may extend up to 180 days)<br/>━━━━━━━━━━━━━━━━━━━"]
+
+    %% ===== PROCESSING PERIOD =====
+    TIMELINE_START --> PROCESSING["🔄 PROCESSING PERIOD<br/><br/>• Lender review &amp; analysis<br/>• Due diligence<br/>• Additional verifications<br/><br/>⚠️ The lender may request<br/>additional information<br/>at any time"]
+
+    PROCESSING --> ADD_INFO{"📨 Has the lender requested<br/>additional information?"}
+
+    ADD_INFO -- "YES" --> PROVIDE_INFO["📤 Client provides the<br/>additional documents<br/>requested by the lender"]
+    PROVIDE_INFO --> PROCESSING
+
+    ADD_INFO -- "NO" --> FUNDING
+
+    %% ===== FINAL FUNDING =====
+    FUNDING(["🎉 FINAL FUNDING<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>💰 Client receives the full funds<br/>from the lender<br/><br/>📊 Fee Summary (deducted at funding):<br/>• 4% Grammont service fee<br/>• 5% Lender fee<br/><br/>📅 Timeline: 60–90 business days<br/>after escrow deposit<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>✅ PROCESS COMPLETE"])
+
+    %% ===== ROAD MAP VISUAL (reference) =====
+    ROADMAP["📍 FUNDING ROADMAP<br/>(Road Map to Funding.pdf)<br/><br/>1️⃣ Present a Viable Project<br/>2️⃣ Show Financial Activity<br/>3️⃣ Provide a Solid Business Plan<br/>4️⃣ Your Commitment (10%)<br/>5️⃣ Work with the Right Partner<br/>   → Grammont Enterprises<br/>   → Up to 90% without personal guarantees<br/>   → Typically within 60 business days"]
+
+    START -.-> ROADMAP
+
+    %% ===== STYLES =====
+    classDef startEnd fill:#D4A843,stroke:#8B6914,stroke-width:3px,color:#1a1a1a,font-weight:bold
+    classDef etapaHeader fill:#2C3E50,stroke:#1a252f,stroke-width:2px,color:#FFFFFF,font-weight:bold
+    classDef action fill:#EBF5FB,stroke:#2980B9,stroke-width:1px,color:#1a1a1a
+    classDef decision fill:#FEF9E7,stroke:#F39C12,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef success fill:#D5F5E3,stroke:#27AE60,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef danger fill:#FADBD8,stroke:#E74C3C,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef payment fill:#F5EEF8,stroke:#8E44AD,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef roadmap fill:#FCF3CF,stroke:#D4A843,stroke-width:2px,color:#1a1a1a,font-style:italic
+
+    class START,FUNDING startEnd
+    class E1_HEADER,E2_HEADER,E3_HEADER,E4_HEADER,E5_HEADER,DOCS_HEADER,CRM_PAYMENT,ESCROW etapaHeader
+    class CONTACT,E1_COLLECT,E2_PF,E2_PJ,E3_ASSETS,E3_LIABILITIES,E3_INCOME,E4_EXEC,E4_OPS,E4_FIN,E4_CRITICAL,DOCS_LIST,CRM_INFO,E5_TERMS,E5_FEES,ESCROW_DETAILS,PROCESSING,PROVIDE_INFO action
+    class E1_CHECK,E2_TYPE,DOCS_CHECK,CRM_PAID,E5_SIGN,ESCROW_CHECK,ADD_INFO decision
+    class E1_VALIDATED,E2_VALIDATED,E3_VALIDATED,E4_VALIDATED,CRM_ACTIVATED,E3_CALC,TIMELINE_START success
+    class E1_FAIL,ESCROW_DEAD,E5_EXPIRED danger
+    class E1_RETRY,DOCS_PENDING,CRM_WAIT action
+    class ROADMAP roadmap
+      </pre>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- PORTUGUESE DIAGRAM -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="diagram-pt" class="mermaid-panel">
       <pre class="mermaid">
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#D4A843', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#B8860B', 'lineColor': '#333333', 'secondaryColor': '#f5f0e1', 'tertiaryColor': '#fff8e7', 'fontSize': '14px'}}}%%
 
@@ -289,12 +503,12 @@ flowchart TD
 
     %% ===== INÍCIO =====
     START(["🏦 GRAMMONT ENTERPRISES<br/>Empréstimos Privados 90/10<br/>Fluxo de Captação de Recursos"])
-    START --> CONTACT["📞 Contato Inicial com o Cliente<br/>— Apresentação do modelo 90/10 —<br/>Cliente entra com 10%, Grammont financia 90%"]
+    START --> CONTACT["📞 Contato Inicial com o Cliente<br/>— Apresentação do modelo 90/10 —<br/>Cliente entra com 10%, Grammont financia 90%<br/>Única taxa antecipada: US$ 100 depósito CRM"]
 
     %% ===== ETAPA 1: TRIAGEM E INTAKE =====
     CONTACT --> E1_HEADER{{"⚙️ ETAPA 1: TRIAGEM &amp; INTAKE<br/>📄 Business Intake Form 4-2025.pdf"}}
 
-    E1_HEADER --> E1_COLLECT["📋 Coleta de Dados do Cliente:<br/>• Nome completo<br/>• Nome da empresa<br/>• Endereço da empresa<br/>• Data de início da empresa<br/>• Pontuação de crédito (3 bureaus — somente EUA)<br/>• Avaliação do imóvel a ser financiado<br/>• Valor do empréstimo solicitado<br/>• Descrição do negócio<br/>• Receita bruta mensal depositada em conta<br/>• Endereço residencial<br/>• Endereço comercial<br/>• Telefones (comercial + celular)<br/>• SSN ou cópia do passaporte<br/>• Data de nascimento<br/>• Identificação fiscal da empresa (EIN / Tax ID)<br/>• E-mail empresarial<br/>• Percentual de participação societária<br/>• Declarações de imposto dos últimos 2 anos (somente EUA)"]
+    E1_HEADER --> E1_COLLECT["📋 Coleta de Dados do Cliente:<br/>• Nome completo (Client's Name)<br/>• Nome da empresa (Company Name)<br/>• Endereço do local a ser financiado<br/>• Data de início da empresa (MM/DD/YYYY)<br/>• Pontuação de crédito — 3 bureaus (somente EUA)<br/>• Avaliação do imóvel a ser financiado<br/>• Valor do empréstimo solicitado<br/>• Descrição do negócio<br/>• Receita bruta mensal depositada em conta<br/>• Endereço residencial<br/>• Endereço comercial<br/>• Telefones (comercial + celular)<br/>• SSN ou cópia do passaporte<br/>• Data de nascimento<br/>• Identificação fiscal da empresa (EIN / Tax ID)<br/>• E-mail empresarial<br/>• Percentual de participação societária<br/>• Declarações de imposto dos últimos 2 anos (somente EUA)"]
 
     E1_COLLECT --> E1_CHECK{"🔍 Verificação Crítica:<br/>O cliente possui 10%<br/>do valor do empréstimo?"}
 
@@ -309,9 +523,9 @@ flowchart TD
 
     E2_HEADER --> E2_TYPE{"🏢 Tipo de Solicitante?"}
 
-    E2_TYPE -- "👤 Pessoa Física" --> E2_PF["📝 Seção A — Pessoa Física<br/><br/>• Nome do solicitante<br/>• Nome do pai ou cônjuge<br/>• Gênero / Estado civil / Data de nascimento<br/>• Nacionalidade / Status de residência<br/>• PAN / Aadhaar (se aplicável)<br/>• Documento de identidade apresentado<br/>• Endereço residencial completo<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço permanente (se diferente)<br/>• Foto 3x4 recente<br/>• Declaração assinada pelo solicitante"]
+    E2_TYPE -- "👤 Pessoa Física" --> E2_PF["📝 Seção A — Pessoa Física (Individuals)<br/><br/>• Nome do solicitante<br/>• Nome do pai ou cônjuge<br/>• Gênero / Estado civil / Data de nascimento<br/>• Nacionalidade / Status de residência<br/>• PAN / Aadhaar (se aplicável)<br/>• Documento de identidade apresentado<br/>• Endereço residencial completo<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço permanente (se diferente)<br/>• Foto 3x4 recente<br/>• Declaração assinada pelo solicitante"]
 
-    E2_TYPE -- "🏛️ Pessoa Jurídica" --> E2_PJ["📝 Seção B — Pessoa Jurídica<br/><br/>• Razão social da empresa<br/>• Data e local de constituição<br/>• Data de início das atividades<br/>• PAN / Nº de registro (ex.: CIN, CNPJ)<br/>• Tipo jurídico (LLC, Corp, Ltda, etc.)<br/>• Endereço para correspondência<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço registrado (se diferente)<br/>• Sócios / Diretores / Promotores<br/>  (nomes, documentos, endereços, fotos)<br/>• DIN dos diretores (se aplicável)<br/>• Aadhaar dos sócios (se aplicável)<br/>• Declaração assinada pelo representante"]
+    E2_TYPE -- "🏛️ Pessoa Jurídica" --> E2_PJ["📝 Seção B — Pessoa Jurídica (Non-Individuals)<br/><br/>• Razão social da empresa<br/>• Data e local de constituição<br/>• Data de início das atividades<br/>• PAN / Nº de registro (ex.: CIN, CNPJ)<br/>• Tipo jurídico (LLC, Corp, Ltda, etc.)<br/>• Endereço para correspondência<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço registrado (se diferente)<br/>• Sócios / Diretores / Promotores<br/>  (nomes, documentos, endereços, fotos)<br/>• DIN dos diretores (se aplicável)<br/>• Aadhaar dos sócios (se aplicável)<br/>• Declaração assinada pelo representante"]
 
     E2_PF --> E2_VALIDATED["✅ Etapa 2 Completa<br/>KYC aprovado pela Grammont Enterprises"]
     E2_PJ --> E2_VALIDATED
@@ -319,14 +533,14 @@ flowchart TD
     %% ===== ETAPA 3: SAÚDE FINANCEIRA =====
     E2_VALIDATED --> E3_HEADER{{"⚙️ ETAPA 3: SAÚDE FINANCEIRA<br/>📄 Personal Financial Statement.pdf"}}
 
-    E3_HEADER --> E3_ASSETS["💰 ATIVOS:<br/>• Caixa, Conta Corrente, Poupança<br/>• Valor de resgate de Seguro de Vida<br/>• Ações e Títulos (negociados em bolsa)<br/>• Ações e Títulos (não negociados)<br/>• Contas e Notas a Receber<br/>• Hipotecas e Contratos de propriedade<br/>• Anuidades / Previdência<br/>• Contas de Aposentadoria<br/>• Participações em empresas de capital fechado<br/>• Imóvel Residencial (principal)<br/>• Outros Imóveis<br/>• Imóveis de Temporada (Time Shares)<br/>• Petróleo e Gás<br/>• Automóveis<br/>• Bens Pessoais<br/>• Outros Ativos<br/>• Ativos mantidos fora do país"]
+    E3_HEADER --> E3_ASSETS["💰 ATIVOS (Assets):<br/>• Caixa, Conta Corrente, Poupança<br/>• Valor de resgate de Seguro de Vida<br/>• Ações e Títulos (negociados em bolsa)<br/>• Ações e Títulos (não negociados)<br/>• Contas e Notas a Receber<br/>• Hipotecas e Contratos de propriedade<br/>• Anuidades / Previdência<br/>• Contas de Aposentadoria<br/>• Participações em empresas de capital fechado<br/>• Imóvel Residencial (principal)<br/>• Outros Imóveis<br/>• Imóveis de Temporada (Time Shares)<br/>• Petróleo e Gás<br/>• Automóveis<br/>• Bens Pessoais<br/>• Outros Ativos<br/>• Ativos mantidos fora do país"]
 
-    E3_HEADER --> E3_LIABILITIES["📊 PASSIVOS:<br/>• Empréstimos parcelados (Instituições)<br/>• Empréstimos parcelados (Pessoas Físicas)<br/>• Dívida de Cartão de Crédito<br/>• Linhas de Crédito<br/>• Impostos de Renda a Pagar<br/>• Outros Impostos a Pagar<br/>• Hipoteca Residencial — 1º Gravame<br/>• Hipoteca Residencial — 2º Gravame<br/>• Hipotecas sobre Outros Imóveis<br/>• Contratos de Compra e Venda<br/>• Outros Passivos (Sociedades)<br/>• Outros Passivos (Empresas de capital fechado)<br/>• Outros Passivos"]
+    E3_HEADER --> E3_LIABILITIES["📊 PASSIVOS (Liabilities):<br/>• Empréstimos parcelados (Instituições)<br/>• Empréstimos parcelados (Pessoas Físicas)<br/>• Dívida de Cartão de Crédito<br/>• Linhas de Crédito<br/>• Impostos de Renda a Pagar<br/>• Outros Impostos a Pagar<br/>• Hipoteca Residencial — 1º Gravame<br/>• Hipoteca Residencial — 2º Gravame<br/>• Hipotecas sobre Outros Imóveis<br/>• Contratos de Compra e Venda<br/>• Outros Passivos (Sociedades)<br/>• Outros Passivos (Empresas de capital fechado)<br/>• Outros Passivos"]
 
-    E3_ASSETS --> E3_CALC["🧮 CÁLCULO OBRIGATÓRIO:<br/>━━━━━━━━━━━━━━━━━━━<br/>Patrimônio Líquido =<br/>Total de Ativos − Total de Passivos<br/>━━━━━━━━━━━━━━━━━━━"]
+    E3_ASSETS --> E3_CALC["🧮 CÁLCULO OBRIGATÓRIO:<br/>━━━━━━━━━━━━━━━━━━━<br/>Patrimônio Líquido (Net Worth) =<br/>Total de Ativos − Total de Passivos<br/>━━━━━━━━━━━━━━━━━━━"]
     E3_LIABILITIES --> E3_CALC
 
-    E3_HEADER --> E3_INCOME["📈 RENDA:<br/>• Salários e Remuneração<br/>• Pensões e Anuidades<br/>• Previdência Social<br/>• Renda de Fideicomissos (Trusts)<br/>• Renda de Negócios / Imóveis<br/>• Receita de Vendas / Aluguéis<br/>• Despesas Operacionais<br/>• Venda de Ativos"]
+    E3_HEADER --> E3_INCOME["📈 RENDA (Income):<br/>• Salários e Remuneração<br/>• Pensões e Anuidades<br/>• Previdência Social<br/>• Renda de Fideicomissos (Trusts)<br/>• Renda de Negócios / Imóveis<br/>• Receita de Vendas / Aluguéis<br/>• Despesas Operacionais<br/>• Venda de Ativos"]
 
     E3_INCOME --> E3_CALC
     E3_CALC --> E3_VALIDATED["✅ Etapa 3 Completa<br/>Declaração Financeira Pessoal finalizada"]
@@ -334,13 +548,13 @@ flowchart TD
     %% ===== ETAPA 4: PLANO DE NEGÓCIOS =====
     E3_VALIDATED --> E4_HEADER{{"⚙️ ETAPA 4: PLANO DE NEGÓCIOS<br/>📄 Modelo: redacted business plan.pdf"}}
 
-    E4_HEADER --> E4_EXEC["📑 Sumário Executivo:<br/>• Descrição da empresa<br/>• Visão e missão<br/>• Problema que resolve<br/>• Solução proposta<br/>• Mercado-alvo<br/>• Vantagens competitivas<br/>• Equipe de gestão<br/>• Consultores e Assessores"]
+    E4_HEADER --> E4_EXEC["📑 Sumário Executivo (Executive Summary):<br/>• Descrição da empresa<br/>• Visão e missão<br/>• Problema que resolve<br/>• Solução proposta<br/>• Mercado-alvo<br/>• Vantagens competitivas<br/>• Equipe de gestão (CEO, COO)<br/>• Consultores e Assessores"]
 
-    E4_HEADER --> E4_OPS["🏗️ Operações:<br/>• Localização e Instalações<br/>• Tecnologia utilizada<br/>• Plano de Marketing e Vendas<br/>• Indicadores-chave (KPIs)"]
+    E4_HEADER --> E4_OPS["🏗️ Operações (Operations):<br/>• Localização e Instalações<br/>• Tecnologia (ServiceTitan, CRM)<br/>• Plano de Marketing e Vendas<br/>• Indicadores-chave (KPIs)<br/>• Marcos e Métricas"]
 
-    E4_HEADER --> E4_FIN["💵 Plano Financeiro:<br/>• Premissas principais<br/>• Projeção de receitas (mensal)<br/>• Projeção de despesas (mensal)<br/>• Lucro Líquido por ano<br/>• Margem Bruta esperada"]
+    E4_HEADER --> E4_FIN["💵 Plano Financeiro (Financial Plan):<br/>• Premissas principais<br/>• Projeção de receitas (mensal)<br/>• Projeção de despesas (mensal)<br/>• Lucro Líquido por ano<br/>• Margem Bruta esperada (ex.: 42%)<br/>• EBITDA alvo (ex.: 25%+)"]
 
-    E4_HEADER --> E4_CRITICAL["⚠️ SEÇÕES OBRIGATÓRIAS:<br/><br/>🔑 ESTRATÉGIA DE SAÍDA (Exit Strategy)<br/>Como o empréstimo será quitado?<br/>(ex.: venda para PE, fluxo de caixa,<br/>refinanciamento)<br/><br/>🔑 USO DOS RECURSOS (Use of Funds)<br/>Como os 90% + 10% serão aplicados?<br/>(aquisições, operações, marketing,<br/>equipamentos, capital de giro)"]
+    E4_HEADER --> E4_CRITICAL["⚠️ SEÇÕES OBRIGATÓRIAS:<br/><br/>🔑 ESTRATÉGIA DE SAÍDA (Exit Strategy)<br/>Como o empréstimo será quitado?<br/>(ex.: venda para PE, fluxo de caixa,<br/>refinanciamento, escala e saída)<br/><br/>🔑 USO DOS RECURSOS (Use of Funds)<br/>Como os 90% + 10% serão aplicados?<br/>(aquisições, operações, marketing,<br/>equipamentos, capital de giro)"]
 
     E4_EXEC --> E4_VALIDATED["✅ Etapa 4 Completa<br/>Plano de Negócios aprovado"]
     E4_OPS --> E4_VALIDATED
@@ -348,9 +562,9 @@ flowchart TD
     E4_CRITICAL --> E4_VALIDATED
 
     %% ===== PACOTE DE DOCUMENTOS COMPLEMENTARES =====
-    E4_VALIDATED --> DOCS_HEADER{{"📦 PACOTE DOCUMENTAL COMPLEMENTAR<br/>(Conforme Regras Operacionais — Texto)"}}
+    E4_VALIDATED --> DOCS_HEADER{{"📦 PACOTE DOCUMENTAL COMPLEMENTAR<br/>(Conforme Regras Operacionais — Client Funding Process)"}}
 
-    DOCS_HEADER --> DOCS_LIST["📂 Documentos Adicionais Requeridos:<br/><br/>a) Duas formas de identificação válidas<br/>   (carteira de motorista + passaporte)<br/>b) Formulário de Intake ✅ (já completo)<br/>c) Declaração Financeira Pessoal ✅<br/>d) Plano de Negócios ✅<br/>e) Sumário Executivo + Biografias ✅<br/>f) Comprovação dos 10% disponíveis<br/>   (NÃO pode ser crédito ou recurso emprestado)<br/>g) 6 meses de extratos bancários<br/>   (da empresa ou pessoais, se empresa nova)<br/>h) Relatórios completos de crédito<br/>   (Equifax / Experian / TransUnion ou equivalente)<br/>i) Documentos societários +<br/>   2 anos de demonstrações financeiras (se existente)<br/>j) EIN ou Identificação Fiscal da empresa<br/>k) 2 anos de declarações de imposto<br/>   (NOAs e T1 Generals no Canadá ou equivalente)<br/>l) Nome do advogado responsável pelo empréstimo<br/>m) KYC ✅ (já completo)"]
+    DOCS_HEADER --> DOCS_LIST["📂 Documentos Adicionais Requeridos:<br/><br/>a) Duas formas de identificação válidas<br/>   (driver's license + passport)<br/>b) Formulário de Intake ✅ (já completo)<br/>c) Declaração Financeira Pessoal ✅<br/>d) Plano de Negócios completo ✅<br/>   (com projeções financeiras)<br/>e) Sumário Executivo + Biografias ✅<br/>f) Comprovação dos 10% disponíveis<br/>   (NÃO pode ser crédito, linha de crédito<br/>   ou recurso emprestado)<br/>g) 6 meses de extratos bancários<br/>   (da empresa ou pessoais, se empresa nova)<br/>h) Relatórios completos de crédito<br/>   (Equifax / Experian / TransUnion<br/>   ou agência equivalente do seu país —<br/>   relatórios completos, não apenas scores)<br/>i) Documentos societários (formation docs) +<br/>   2 anos de demonstrações financeiras (se existente)<br/>j) EIN ou Identificação Fiscal da empresa<br/>k) 2 anos de declarações de imposto<br/>   (NOAs e T1 Generals no Canadá ou equivalente)<br/>l) Nome do advogado responsável pelo empréstimo<br/>m) KYC ✅ (já completo)"]
 
     DOCS_LIST --> DOCS_CHECK{"📋 Toda a documentação<br/>está completa?"}
 
@@ -361,7 +575,7 @@ flowchart TD
 
     %% ===== PAGAMENTO CRM =====
     CRM_PAYMENT{{"💳 PAGAMENTO CRM — US$ 100,00"}}
-    CRM_PAYMENT --> CRM_INFO["💰 Taxa de Ativação do CRM:<br/>• Valor: US$ 100,00 (não reembolsável)<br/>• Finalidade: Ativação no sistema CRM<br/>  para rastreamento da operação<br/>• ÚNICO custo antecipado do processo<br/>• Pagamento via Stripe"]
+    CRM_PAYMENT --> CRM_INFO["💰 Taxa de Ativação do CRM:<br/>• Valor: US$ 100,00 (não reembolsável)<br/>• Finalidade: Ativação no sistema CRM<br/>  para rastreamento da operação<br/>• ÚNICO custo antecipado do processo<br/>• Pagamento via Stripe:<br/>  buy.stripe.com/28E28sc5scRscxc2AWcs800"]
 
     CRM_INFO --> CRM_PAID{"💳 Pagamento de<br/>US$ 100 processado?"}
 
@@ -375,7 +589,7 @@ flowchart TD
 
     E5_HEADER --> E5_TERMS["📜 TERMOS DO EMPRÉSTIMO:<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>📌 Valor do Empréstimo: (conforme solicitado)<br/>📌 Entrada (Down Payment): 10% do valor<br/>📌 Taxa de Juros: 6% (somente juros)<br/>📌 Prazo: 10 anos<br/>📌 Quitação: Pagamento balloon ao final<br/>📌 Amortização: Somente juros (Interest Only)<br/>📌 Multa por quitação antecipada: Nenhuma<br/>📌 Taxa de avaliação: N/A<br/>📌 Empresa de Títulos: N/A"]
 
-    E5_TERMS --> E5_FEES["💰 TAXAS (pagas na liberação dos recursos):<br/>━━━━━━━━━━━━━━━━━━━<br/>• 4% — Taxa de serviço Grammont<br/>• 5% — Taxa do credor<br/>━━━━━━━━━━━━━━━━━━━<br/>Total: 9% deduzido na liberação"]
+    E5_TERMS --> E5_FEES["💰 TAXAS (pagas na liberação — at funding):<br/>━━━━━━━━━━━━━━━━━━━<br/>• 4% — Taxa de serviço Grammont<br/>• 5% — Taxa do credor (Lender fee)<br/>━━━━━━━━━━━━━━━━━━━<br/>Total: 9% deduzido na liberação"]
 
     E5_FEES --> E5_SIGN{"✍️ ASSINATURA DA FOLHA DE TERMOS<br/><br/>⏰ Validade do compromisso:<br/>72 HORAS para:<br/>1. Assinar a Folha de Termos<br/>2. Depositar 10% em conta escrow"}
 
@@ -387,16 +601,16 @@ flowchart TD
     %% ===== DEPÓSITO EM ESCROW =====
     ESCROW{{"🏛️ DEPÓSITO EM CONTA ESCROW"}}
 
-    ESCROW --> ESCROW_DETAILS["🔐 Instruções de Depósito:<br/><br/>• 10% do valor do empréstimo<br/>• Via transferência bancária (wire transfer)<br/>• Destino: Conta escrow do ADVOGADO<br/>• ⚠️ OBRIGATÓRIO: deve ser a conta<br/>  escrow do advogado — caso contrário,<br/>  a operação será cancelada"]
+    ESCROW --> ESCROW_DETAILS["🔐 Instruções de Depósito (Wiring Instructions):<br/><br/>• 10% do valor do empréstimo<br/>• Via transferência bancária (wire transfer)<br/>• Destino: Conta escrow do ADVOGADO<br/>• ⚠️ OBRIGATÓRIO: deve ser a conta<br/>  escrow do advogado — caso contrário,<br/>  a operação será cancelada (dead deal)"]
 
     ESCROW_DETAILS --> ESCROW_CHECK{"💰 Depósito de 10%<br/>recebido na conta escrow<br/>do advogado?"}
 
-    ESCROW_CHECK -- "❌ NÃO" --> ESCROW_DEAD["☠️ OPERAÇÃO CANCELADA<br/><br/>Os recursos DEVEM estar na<br/>conta escrow do advogado.<br/>Sem exceções."]
+    ESCROW_CHECK -- "❌ NÃO" --> ESCROW_DEAD["☠️ OPERAÇÃO CANCELADA (Dead Deal)<br/><br/>Os recursos DEVEM estar na<br/>conta escrow do advogado.<br/>Sem exceções."]
 
     ESCROW_CHECK -- "✅ SIM" --> TIMELINE_START["⏱️ CRONÔMETRO INICIADO!<br/>━━━━━━━━━━━━━━━━━━━<br/>60 a 90 dias úteis<br/>para liberação dos recursos<br/>(pode estender até 180 dias)<br/>━━━━━━━━━━━━━━━━━━━"]
 
     %% ===== PERÍODO DE PROCESSAMENTO =====
-    TIMELINE_START --> PROCESSING["🔄 PERÍODO DE PROCESSAMENTO<br/><br/>• Análise pelo credor (lender)<br/>• Diligência prévia (due diligence)<br/>• Verificações adicionais<br/><br/>⚠️ O credor pode solicitar<br/>informações complementares<br/>a qualquer momento"]
+    TIMELINE_START --> PROCESSING["🔄 PERÍODO DE PROCESSAMENTO<br/><br/>• Análise pelo credor (lender review)<br/>• Diligência prévia (due diligence)<br/>• Verificações adicionais<br/><br/>⚠️ O credor pode solicitar<br/>informações complementares<br/>a qualquer momento"]
 
     PROCESSING --> ADD_INFO{"📨 O credor solicitou<br/>informações adicionais?"}
 
@@ -406,7 +620,7 @@ flowchart TD
     ADD_INFO -- "NÃO" --> FUNDING
 
     %% ===== LIBERAÇÃO FINAL DOS RECURSOS =====
-    FUNDING(["🎉 LIBERAÇÃO FINAL DOS RECURSOS<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>💰 Cliente recebe os recursos<br/>completos do credor<br/><br/>📊 Resumo das Deduções:<br/>• 4% taxa Grammont (na liberação)<br/>• 5% taxa do credor (na liberação)<br/><br/>📅 Prazo: 60–90 dias úteis<br/>após depósito em escrow<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>✅ PROCESSO CONCLUÍDO"])
+    FUNDING(["🎉 LIBERAÇÃO FINAL DOS RECURSOS (Final Funding)<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>💰 Cliente recebe os recursos<br/>completos do credor<br/><br/>📊 Resumo das Deduções (at funding):<br/>• 4% taxa Grammont<br/>• 5% taxa do credor<br/><br/>📅 Prazo: 60–90 dias úteis<br/>após depósito em escrow<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>✅ PROCESSO CONCLUÍDO"])
 
     %% ===== ROAD MAP VISUAL (referência) =====
     ROADMAP["📍 ROTEIRO DE CAPTAÇÃO<br/>(Road Map to Funding.pdf)<br/><br/>1️⃣ Apresentar um Projeto Viável<br/>2️⃣ Demonstrar Atividade Financeira<br/>3️⃣ Fornecer um Plano de Negócios Sólido<br/>4️⃣ Seu Compromisso (10%)<br/>5️⃣ Trabalhar com o Parceiro Certo<br/>   → Grammont Enterprises<br/>   → Até 90% sem garantia pessoal<br/>   → Aproximadamente 60 dias úteis"]
@@ -433,6 +647,7 @@ flowchart TD
     class ROADMAP roadmap
       </pre>
     </div>
+
   </div>
 </div>
 
@@ -440,7 +655,7 @@ flowchart TD
 <div class="toast" id="toast"></div>
 
 <!-- HINT + VERSION -->
-<div class="hint">v2.2 · 03.02.2026 &nbsp;|&nbsp; Arraste para mover · Scroll para zoom · Botões no topo para controle</div>
+<div class="hint" id="hintBar">v3.0 · 03.02.2026 &nbsp;|&nbsp; Drag to move · Scroll to zoom · Top buttons for control</div>
 
 <!-- MERMAID CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
@@ -454,14 +669,68 @@ flowchart TD
   var MIN_SCALE = 0.05;
   var MAX_SCALE = 4;
   var ZOOM_STEP = 0.15;
+  var currentLang = 'en';
 
   var container = document.getElementById('canvasContainer');
   var inner = document.getElementById('canvasInner');
   var zoomDisplay = document.getElementById('zoomLevel');
 
-  // ── INIT MERMAID — curve linear para setas retas ──
+  // ── i18n STRINGS ──
+  var i18n = {
+    en: {
+      subtitle: 'Private Loans 90/10 — Funding Process Flow',
+      exportLabel: 'Export PNG',
+      hint: 'v3.0 · 03.02.2026 \u00a0|\u00a0 Drag to move · Scroll to zoom · Top buttons for control',
+      loading: 'Rendering flowchart...',
+      exportFile: 'Grammont_Funding_Process_90-10.png',
+      toastExporting: 'Generating high-resolution image...',
+      toastDone: '✅ PNG image exported successfully!',
+      toastError: 'Error generating image. Please try again.',
+      toastNotFound: 'Error: diagram not found.',
+      toastSwitched: 'Switched to English'
+    },
+    pt: {
+      subtitle: 'Empréstimos Privados 90/10 — Fluxo de Captação de Recursos',
+      exportLabel: 'Exportar PNG',
+      hint: 'v3.0 · 03.02.2026 \u00a0|\u00a0 Arraste para mover · Scroll para zoom · Botões no topo para controle',
+      loading: 'Renderizando fluxograma...',
+      exportFile: 'Grammont_Fluxo_Captacao_90-10.png',
+      toastExporting: 'Gerando imagem em alta resolução...',
+      toastDone: '✅ Imagem PNG exportada com sucesso!',
+      toastError: 'Erro ao gerar imagem. Tente novamente.',
+      toastNotFound: 'Erro: diagrama não encontrado.',
+      toastSwitched: 'Alterado para Português'
+    }
+  };
+
+  // ── LANGUAGE SWITCH ──
+  function switchLang(lang) {
+    if (lang === currentLang) return;
+    currentLang = lang;
+
+    // Toggle button styles
+    document.getElementById('btnEN').classList.toggle('active', lang === 'en');
+    document.getElementById('btnPT').classList.toggle('active', lang === 'pt');
+
+    // Toggle diagrams
+    document.getElementById('diagram-en').classList.toggle('hidden', lang !== 'en');
+    document.getElementById('diagram-pt').classList.toggle('hidden', lang !== 'pt');
+
+    // Update UI strings
+    var strings = i18n[lang];
+    document.getElementById('headerSubtitle').textContent = strings.subtitle;
+    document.getElementById('exportLabel').textContent = strings.exportLabel;
+    document.getElementById('hintBar').innerHTML = strings.hint;
+
+    // Re-fit after switching
+    setTimeout(fitToScreen, 100);
+
+    showToast(strings.toastSwitched);
+  }
+
+  // ── INIT MERMAID ──
   mermaid.initialize({
-    startOnLoad: true,
+    startOnLoad: false,
     theme: 'base',
     themeVariables: {
       primaryColor: '#D4A843',
@@ -483,13 +752,35 @@ flowchart TD
     securityLevel: 'loose'
   });
 
-  // ── AFTER RENDER ──
-  mermaid.run().then(function() {
-    setTimeout(function() {
-      fitToScreen();
+  // ── RENDER BOTH DIAGRAMS ──
+  // Both panels must be visible for Mermaid to render SVGs
+  (async function() {
+    try {
+      // Make sure PT is visible for rendering
+      var ptPanel = document.getElementById('diagram-pt');
+      ptPanel.classList.remove('hidden');
+
+      // Render all mermaid blocks
+      await mermaid.run();
+
+      // Now hide PT and show EN as default
+      ptPanel.classList.add('hidden');
+      document.getElementById('diagram-en').classList.remove('hidden');
+
+      // Set button states
+      document.getElementById('btnEN').classList.add('active');
+      document.getElementById('btnPT').classList.remove('active');
+      currentLang = 'en';
+
+      setTimeout(function() {
+        fitToScreen();
+        document.getElementById('loading').classList.add('hidden');
+      }, 600);
+    } catch(err) {
+      console.error('Mermaid render error:', err);
       document.getElementById('loading').classList.add('hidden');
-    }, 800);
-  });
+    }
+  })();
 
   // ── TRANSFORM ──
   function applyTransform() {
@@ -509,8 +800,8 @@ flowchart TD
   }
 
   function fitToScreen() {
-    var output = document.getElementById('mermaid-output');
-    var svg = output.querySelector('svg');
+    var activePanel = document.getElementById('diagram-' + currentLang);
+    var svg = activePanel.querySelector('svg');
     if (!svg) return;
     var svgW = svg.getBoundingClientRect().width / scale;
     var svgH = svg.getBoundingClientRect().height / scale;
@@ -568,7 +859,7 @@ flowchart TD
 
   container.addEventListener('touchend', function() { isDragging = false; });
 
-  // ── SCROLL ZOOM com ponto focal no cursor ──
+  // ── SCROLL ZOOM with focal point ──
   container.addEventListener('wheel', function(e) {
     e.preventDefault();
     var rect = container.getBoundingClientRect();
@@ -628,10 +919,12 @@ flowchart TD
 
   // ── EXPORT PNG ──
   function exportPNG() {
-    var svgEl = document.querySelector('#mermaid-output svg');
-    if (!svgEl) { showToast('Erro: diagrama não encontrado.'); return; }
+    var strings = i18n[currentLang];
+    var activePanel = document.getElementById('diagram-' + currentLang);
+    var svgEl = activePanel.querySelector('svg');
+    if (!svgEl) { showToast(strings.toastNotFound); return; }
 
-    showToast('Gerando imagem em alta resolução...');
+    showToast(strings.toastExporting);
 
     var svgClone = svgEl.cloneNode(true);
     svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -671,17 +964,17 @@ flowchart TD
       canvas.toBlob(function(blob) {
         var a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'Grammont_Fluxo_Captacao_90-10.png';
+        a.download = strings.exportFile;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
-        showToast('✅ Imagem PNG exportada com sucesso!');
+        showToast(strings.toastDone);
       }, 'image/png');
     };
     img.onerror = function() {
       URL.revokeObjectURL(url);
-      showToast('Erro ao gerar imagem. Tente novamente.');
+      showToast(strings.toastError);
     };
     img.src = url;
   }
@@ -696,7 +989,6 @@ flowchart TD
   }
 
   // ── BLOCK NATIVE ZOOM GLOBALLY ──
-  // Prevent double-tap zoom on the whole page
   var lastTouchEnd = 0;
   document.addEventListener('touchend', function(e) {
     var now = Date.now();
@@ -706,7 +998,6 @@ flowchart TD
     lastTouchEnd = now;
   }, { passive: false });
 
-  // Prevent pinch zoom on anything outside canvas (header, etc.)
   document.addEventListener('gesturestart', function(e) {
     e.preventDefault();
   }, { passive: false });
