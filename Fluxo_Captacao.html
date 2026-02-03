@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammont Enterprises — Fluxo de Captação de Recursos 90/10</title>
+
+<!-- Open Graph — Preview no WhatsApp / Redes Sociais -->
+<meta property="og:title" content="Grammont Enterprises — Fluxo 90/10">
+<meta property="og:description" content="Fluxograma interativo do processo de captação de recursos. Cliente entra com 10%, Grammont financia 90%. Visualize todas as etapas do funding.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.grammontenterprises.com/logo.png">
+<meta name="description" content="Fluxograma completo do processo de empréstimos privados 90/10 da Grammont Enterprises. Todas as etapas: Intake, KYC, Financial Statement, Business Plan e Term Sheet.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4A843;
+    --gold-dark: #8B6914;
+    --charcoal: #1a1a1a;
+    --slate: #2C3E50;
+    --cream: #FFF8E7;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, var(--charcoal) 0%, #2a2218 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-logo {
+    width: 44px; height: 44px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--charcoal);
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--gold);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  .btn-primary:hover {
+    background: #e6bc5a;
+    border-color: #e6bc5a;
+  }
+
+  .btn-icon {
+    padding: 8px 10px;
+    font-size: 16px;
+    min-width: 36px;
+    justify-content: center;
+  }
+
+  .zoom-display {
+    font-size: 12px;
+    color: #888;
+    min-width: 42px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── CANVAS ── */
+  .canvas-container {
+    position: fixed;
+    top: 72px; left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    cursor: grab;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(212,168,67,0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(212,168,67,0.02) 0%, transparent 50%),
+      var(--charcoal);
+  }
+
+  .canvas-container:active { cursor: grabbing; }
+
+  .canvas-inner {
+    position: absolute;
+    transform-origin: 0 0;
+    padding: 40px;
+  }
+
+  #mermaid-output {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,168,67,0.15);
+  }
+
+  #mermaid-output svg {
+    max-width: none !important;
+    height: auto !important;
+  }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity 0.5s ease;
+  }
+
+  .loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-spinner {
+    width: 48px; height: 48px;
+    border: 3px solid #333;
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 1px;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--slate);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    border: 1px solid var(--gold);
+    z-index: 150;
+    opacity: 0;
+    transition: all 0.35s ease;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* ── HINT ── */
+  .hint {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    font-size: 11px;
+    color: #555;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .header { padding: 10px 12px; }
+    .header-title { font-size: 14px; }
+    .header-subtitle { display: none; }
+    .btn { padding: 6px 10px; font-size: 12px; }
+    .btn .label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Renderizando fluxograma...</div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">GE</div>
+    <div>
+      <div class="header-title">Grammont Enterprises</div>
+      <div class="header-subtitle">Fluxo de Captação de Recursos — Empréstimos Privados 90/10</div>
+    </div>
+  </div>
+  <div class="header-controls">
+    <button class="btn btn-icon" onclick="zoomOut()" title="Diminuir zoom">−</button>
+    <span class="zoom-display" id="zoomLevel">100%</span>
+    <button class="btn btn-icon" onclick="zoomIn()" title="Aumentar zoom">+</button>
+    <button class="btn btn-icon" onclick="fitToScreen()" title="Ajustar à tela">⊞</button>
+    <button class="btn btn-primary" onclick="exportPNG()" title="Baixar como imagem PNG">
+      ⬇ <span class="label">Exportar PNG</span>
+    </button>
+  </div>
+</header>
+
+<!-- CANVAS -->
+<div class="canvas-container" id="canvasContainer">
+  <div class="canvas-inner" id="canvasInner">
+    <div id="mermaid-output">
+      <pre class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#D4A843', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#B8860B', 'lineColor': '#333333', 'secondaryColor': '#f5f0e1', 'tertiaryColor': '#fff8e7', 'fontSize': '14px'}}}%%
+
+flowchart TD
+
+    START(["🏦 GRAMMONT ENTERPRISES<br/>Empréstimos Privados 90/10<br/>Fluxo de Captação de Recursos"])
+    START --> CONTACT["📞 Contato Inicial com o Cliente<br/>— Apresentação do modelo 90/10 —<br/>Cliente entra com 10%, Grammont financia 90%"]
+
+    CONTACT --> E1_HEADER{{"⚙️ ETAPA 1: TRIAGEM & INTAKE<br/>📄 Business Intake Form 4-2025.pdf"}}
+
+    E1_HEADER --> E1_COLLECT["📋 Coleta de Dados do Cliente:<br/>• Nome completo<br/>• Nome da empresa<br/>• Endereço da empresa<br/>• Data de início da empresa<br/>• Pontuação de crédito (3 bureaus — somente EUA)<br/>• Avaliação do imóvel a ser financiado<br/>• Valor do empréstimo solicitado<br/>• Descrição do negócio<br/>• Receita bruta mensal depositada em conta<br/>• Endereço residencial<br/>• Endereço comercial<br/>• Telefones (comercial + celular)<br/>• SSN ou cópia do passaporte<br/>• Data de nascimento<br/>• Identificação fiscal da empresa (EIN / Tax ID)<br/>• E-mail empresarial<br/>• Percentual de participação societária<br/>• Declarações de imposto dos últimos 2 anos (somente EUA)"]
+
+    E1_COLLECT --> E1_CHECK{"🔍 Verificação Crítica:<br/>O cliente possui 10%<br/>do valor do empréstimo?"}
+
+    E1_CHECK -- "❌ NÃO" --> E1_FAIL["🚫 FLUXO INTERROMPIDO<br/><br/>Sugerir serviços de consultoria<br/>para captação de recursos<br/>(Política Grammont)"]
+    E1_FAIL --> E1_RETRY["🔄 Cliente pode retornar<br/>quando dispuser dos 10%"]
+    E1_RETRY --> E1_CHECK
+
+    E1_CHECK -- "✅ SIM" --> E1_VALIDATED["✅ Etapa 1 Validada<br/>Formulário de Intake preenchido e aprovado"]
+
+    E1_VALIDATED --> E2_HEADER{{"⚙️ ETAPA 2: COMPLIANCE & KYC<br/>📄 KYC_ApplForm.pdf"}}
+
+    E2_HEADER --> E2_TYPE{"🏢 Tipo de Solicitante?"}
+
+    E2_TYPE -- "👤 Pessoa Física" --> E2_PF["📝 Seção A — Pessoa Física<br/><br/>• Nome do solicitante<br/>• Nome do pai ou cônjuge<br/>• Gênero / Estado civil / Data de nascimento<br/>• Nacionalidade / Status de residência<br/>• PAN / Aadhaar (se aplicável)<br/>• Documento de identidade apresentado<br/>• Endereço residencial completo<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço permanente (se diferente)<br/>• Foto 3x4 recente<br/>• Declaração assinada pelo solicitante"]
+
+    E2_TYPE -- "🏛️ Pessoa Jurídica" --> E2_PJ["📝 Seção B — Pessoa Jurídica<br/><br/>• Razão social da empresa<br/>• Data e local de constituição<br/>• Data de início das atividades<br/>• PAN / Nº de registro (ex.: CIN, CNPJ)<br/>• Tipo jurídico (LLC, Corp, Ltda, etc.)<br/>• Endereço para correspondência<br/>• Contatos (telefone, celular, fax, e-mail)<br/>• Comprovante de endereço<br/>• Endereço registrado (se diferente)<br/>• Sócios / Diretores / Promotores<br/>  (nomes, documentos, endereços, fotos)<br/>• DIN dos diretores (se aplicável)<br/>• Aadhaar dos sócios (se aplicável)<br/>• Declaração assinada pelo representante"]
+
+    E2_PF --> E2_VALIDATED["✅ Etapa 2 Completa<br/>KYC aprovado pela Grammont Enterprises"]
+    E2_PJ --> E2_VALIDATED
+
+    E2_VALIDATED --> E3_HEADER{{"⚙️ ETAPA 3: SAÚDE FINANCEIRA<br/>📄 Personal Financial Statement.pdf"}}
+
+    E3_HEADER --> E3_ASSETS["💰 ATIVOS:<br/>• Caixa, Conta Corrente, Poupança<br/>• Valor de resgate de Seguro de Vida<br/>• Ações e Títulos (negociados em bolsa)<br/>• Ações e Títulos (não negociados)<br/>• Contas e Notas a Receber<br/>• Hipotecas e Contratos de propriedade<br/>• Anuidades / Previdência<br/>• Contas de Aposentadoria<br/>• Participações em empresas de capital fechado<br/>• Imóvel Residencial (principal)<br/>• Outros Imóveis<br/>• Imóveis de Temporada (Time Shares)<br/>• Petróleo e Gás<br/>• Automóveis<br/>• Bens Pessoais<br/>• Outros Ativos<br/>• Ativos mantidos fora do país"]
+
+    E3_HEADER --> E3_LIABILITIES["📊 PASSIVOS:<br/>• Empréstimos parcelados (Instituições)<br/>• Empréstimos parcelados (Pessoas Físicas)<br/>• Dívida de Cartão de Crédito<br/>• Linhas de Crédito<br/>• Impostos de Renda a Pagar<br/>• Outros Impostos a Pagar<br/>• Hipoteca Residencial — 1º Gravame<br/>• Hipoteca Residencial — 2º Gravame<br/>• Hipotecas sobre Outros Imóveis<br/>• Contratos de Compra e Venda<br/>• Outros Passivos (Sociedades)<br/>• Outros Passivos (Empresas de capital fechado)<br/>• Outros Passivos"]
+
+    E3_ASSETS --> E3_CALC["🧮 CÁLCULO OBRIGATÓRIO:<br/>━━━━━━━━━━━━━━━━━━━<br/>Patrimônio Líquido =<br/>Total de Ativos − Total de Passivos<br/>━━━━━━━━━━━━━━━━━━━"]
+    E3_LIABILITIES --> E3_CALC
+
+    E3_HEADER --> E3_INCOME["📈 RENDA:<br/>• Salários e Remuneração<br/>• Pensões e Anuidades<br/>• Previdência Social<br/>• Renda de Fideicomissos (Trusts)<br/>• Renda de Negócios / Imóveis<br/>• Receita de Vendas / Aluguéis<br/>• Despesas Operacionais<br/>• Venda de Ativos"]
+
+    E3_INCOME --> E3_CALC
+    E3_CALC --> E3_VALIDATED["✅ Etapa 3 Completa<br/>Declaração Financeira Pessoal finalizada"]
+
+    E3_VALIDATED --> E4_HEADER{{"⚙️ ETAPA 4: PLANO DE NEGÓCIOS<br/>📄 Modelo: redacted business plan.pdf"}}
+
+    E4_HEADER --> E4_EXEC["📑 Sumário Executivo:<br/>• Descrição da empresa<br/>• Visão e missão<br/>• Problema que resolve<br/>• Solução proposta<br/>• Mercado-alvo<br/>• Vantagens competitivas<br/>• Equipe de gestão<br/>• Consultores e Assessores"]
+
+    E4_HEADER --> E4_OPS["🏗️ Operações:<br/>• Localização e Instalações<br/>• Tecnologia utilizada<br/>• Plano de Marketing e Vendas<br/>• Indicadores-chave (KPIs)"]
+
+    E4_HEADER --> E4_FIN["💵 Plano Financeiro:<br/>• Premissas principais<br/>• Projeção de receitas (mensal)<br/>• Projeção de despesas (mensal)<br/>• Lucro Líquido por ano<br/>• Margem Bruta esperada"]
+
+    E4_HEADER --> E4_CRITICAL["⚠️ SEÇÕES OBRIGATÓRIAS:<br/><br/>🔑 ESTRATÉGIA DE SAÍDA (Exit Strategy)<br/>Como o empréstimo será quitado?<br/>(ex.: venda para PE, fluxo de caixa,<br/>refinanciamento)<br/><br/>🔑 USO DOS RECURSOS (Use of Funds)<br/>Como os 90% + 10% serão aplicados?<br/>(aquisições, operações, marketing,<br/>equipamentos, capital de giro)"]
+
+    E4_EXEC --> E4_VALIDATED["✅ Etapa 4 Completa<br/>Plano de Negócios aprovado"]
+    E4_OPS --> E4_VALIDATED
+    E4_FIN --> E4_VALIDATED
+    E4_CRITICAL --> E4_VALIDATED
+
+    E4_VALIDATED --> DOCS_HEADER{{"📦 PACOTE DOCUMENTAL COMPLEMENTAR<br/>(Conforme Regras Operacionais — Texto)"}}
+
+    DOCS_HEADER --> DOCS_LIST["📂 Documentos Adicionais Requeridos:<br/><br/>a) Duas formas de identificação válidas<br/>   (carteira de motorista + passaporte)<br/>b) Formulário de Intake ✅ (já completo)<br/>c) Declaração Financeira Pessoal ✅<br/>d) Plano de Negócios ✅<br/>e) Sumário Executivo + Biografias ✅<br/>f) Comprovação dos 10% disponíveis<br/>   (NÃO pode ser crédito ou recurso emprestado)<br/>g) 6 meses de extratos bancários<br/>   (da empresa ou pessoais, se empresa nova)<br/>h) Relatórios completos de crédito<br/>   (Equifax / Experian / TransUnion ou equivalente)<br/>i) Documentos societários +<br/>   2 anos de demonstrações financeiras (se existente)<br/>j) EIN ou Identificação Fiscal da empresa<br/>k) 2 anos de declarações de imposto<br/>   (NOAs e T1 Generals no Canadá ou equivalente)<br/>l) Nome do advogado responsável pelo empréstimo<br/>m) KYC ✅ (já completo)"]
+
+    DOCS_LIST --> DOCS_CHECK{"📋 Toda a documentação<br/>está completa?"}
+
+    DOCS_CHECK -- "❌ INCOMPLETA" --> DOCS_PENDING["⏳ Solicitar documentos<br/>pendentes ao cliente<br/><br/>⚠️ O processo de revisão NÃO<br/>pode começar sem toda a<br/>documentação completa"]
+    DOCS_PENDING --> DOCS_CHECK
+
+    DOCS_CHECK -- "✅ COMPLETA" --> CRM_PAYMENT
+
+    CRM_PAYMENT{{"💳 PAGAMENTO CRM — US$ 100,00"}}
+    CRM_PAYMENT --> CRM_INFO["💰 Taxa de Ativação do CRM:<br/>• Valor: US$ 100,00 (não reembolsável)<br/>• Finalidade: Ativação no sistema CRM<br/>  para rastreamento da operação<br/>• ÚNICO custo antecipado do processo<br/>• Pagamento via Stripe"]
+
+    CRM_INFO --> CRM_PAID{"💳 Pagamento de<br/>US$ 100 processado?"}
+
+    CRM_PAID -- "❌ NÃO" --> CRM_WAIT["⏳ Aguardando pagamento<br/><br/>⚠️ A aplicação NÃO será<br/>finalizada nem submetida<br/>sem o depósito do CRM"]
+    CRM_WAIT --> CRM_PAID
+
+    CRM_PAID -- "✅ SIM" --> CRM_ACTIVATED["✅ Operação Ativada no CRM<br/>Dropbox compartilhado com o cliente"]
+
+    CRM_ACTIVATED --> E5_HEADER{{"⚙️ ETAPA 5: FOLHA DE TERMOS (Term Sheet)<br/>📄 Term Sheet Redacted (1).pdf"}}
+
+    E5_HEADER --> E5_TERMS["📜 TERMOS DO EMPRÉSTIMO:<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>📌 Valor do Empréstimo: (conforme solicitado)<br/>📌 Entrada (Down Payment): 10% do valor<br/>📌 Taxa de Juros: 6% (somente juros)<br/>📌 Prazo: 10 anos<br/>📌 Quitação: Pagamento balloon ao final<br/>📌 Amortização: Somente juros (Interest Only)<br/>📌 Multa por quitação antecipada: Nenhuma<br/>📌 Taxa de avaliação: N/A<br/>📌 Empresa de Títulos: N/A"]
+
+    E5_TERMS --> E5_FEES["💰 TAXAS (pagas na liberação dos recursos):<br/>━━━━━━━━━━━━━━━━━━━<br/>• 4% — Taxa de serviço Grammont<br/>• 5% — Taxa do credor<br/>━━━━━━━━━━━━━━━━━━━<br/>Total: 9% deduzido na liberação"]
+
+    E5_FEES --> E5_SIGN{"✍️ ASSINATURA DA FOLHA DE TERMOS<br/><br/>⏰ Validade do compromisso:<br/>72 HORAS para:<br/>1. Assinar a Folha de Termos<br/>2. Depositar 10% em conta escrow"}
+
+    E5_SIGN -- "❌ Não assinado em 72h" --> E5_EXPIRED["🚫 FOLHA DE TERMOS EXPIRADA<br/>Condições sujeitas a alteração<br/><br/>Necessário renegociar os termos"]
+    E5_EXPIRED --> E5_HEADER
+
+    E5_SIGN -- "✅ Assinado em 72h" --> ESCROW
+
+    ESCROW{{"🏛️ DEPÓSITO EM CONTA ESCROW"}}
+
+    ESCROW --> ESCROW_DETAILS["🔐 Instruções de Depósito:<br/><br/>• 10% do valor do empréstimo<br/>• Via transferência bancária (wire transfer)<br/>• Destino: Conta escrow do ADVOGADO<br/>• ⚠️ OBRIGATÓRIO: deve ser a conta<br/>  escrow do advogado — caso contrário,<br/>  a operação será cancelada"]
+
+    ESCROW_DETAILS --> ESCROW_CHECK{"💰 Depósito de 10%<br/>recebido na conta escrow<br/>do advogado?"}
+
+    ESCROW_CHECK -- "❌ NÃO" --> ESCROW_DEAD["☠️ OPERAÇÃO CANCELADA<br/><br/>Os recursos DEVEM estar na<br/>conta escrow do advogado.<br/>Sem exceções."]
+
+    ESCROW_CHECK -- "✅ SIM" --> TIMELINE_START["⏱️ CRONÔMETRO INICIADO!<br/>━━━━━━━━━━━━━━━━━━━<br/>60 a 90 dias úteis<br/>para liberação dos recursos<br/>(pode estender até 180 dias)<br/>━━━━━━━━━━━━━━━━━━━"]
+
+    TIMELINE_START --> PROCESSING["🔄 PERÍODO DE PROCESSAMENTO<br/><br/>• Análise pelo credor (lender)<br/>• Diligência prévia (due diligence)<br/>• Verificações adicionais<br/><br/>⚠️ O credor pode solicitar<br/>informações complementares<br/>a qualquer momento"]
+
+    PROCESSING --> ADD_INFO{"📨 O credor solicitou<br/>informações adicionais?"}
+
+    ADD_INFO -- "SIM" --> PROVIDE_INFO["📤 Cliente fornece os<br/>documentos adicionais<br/>solicitados pelo credor"]
+    PROVIDE_INFO --> PROCESSING
+
+    ADD_INFO -- "NÃO" --> FUNDING
+
+    FUNDING(["🎉 LIBERAÇÃO FINAL DOS RECURSOS<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>💰 Cliente recebe os recursos<br/>completos do credor<br/><br/>📊 Resumo das Deduções:<br/>• 4% taxa Grammont (na liberação)<br/>• 5% taxa do credor (na liberação)<br/><br/>📅 Prazo: 60–90 dias úteis<br/>após depósito em escrow<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>✅ PROCESSO CONCLUÍDO"])
+
+    ROADMAP["📍 ROTEIRO DE CAPTAÇÃO<br/>(Road Map to Funding.pdf)<br/><br/>1️⃣ Apresentar um Projeto Viável<br/>2️⃣ Demonstrar Atividade Financeira<br/>3️⃣ Fornecer um Plano de Negócios Sólido<br/>4️⃣ Seu Compromisso (10%)<br/>5️⃣ Trabalhar com o Parceiro Certo<br/>   → Grammont Enterprises<br/>   → Até 90% sem garantia pessoal<br/>   → Aproximadamente 60 dias úteis"]
+
+    START -.-> ROADMAP
+
+    classDef startEnd fill:#D4A843,stroke:#8B6914,stroke-width:3px,color:#1a1a1a,font-weight:bold
+    classDef etapaHeader fill:#2C3E50,stroke:#1a252f,stroke-width:2px,color:#FFFFFF,font-weight:bold
+    classDef action fill:#EBF5FB,stroke:#2980B9,stroke-width:1px,color:#1a1a1a
+    classDef decision fill:#FEF9E7,stroke:#F39C12,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef success fill:#D5F5E3,stroke:#27AE60,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef danger fill:#FADBD8,stroke:#E74C3C,stroke-width:2px,color:#1a1a1a,font-weight:bold
+    classDef roadmap fill:#FCF3CF,stroke:#D4A843,stroke-width:2px,color:#1a1a1a,font-style:italic
+
+    class START,FUNDING startEnd
+    class E1_HEADER,E2_HEADER,E3_HEADER,E4_HEADER,E5_HEADER,DOCS_HEADER,CRM_PAYMENT,ESCROW etapaHeader
+    class CONTACT,E1_COLLECT,E2_PF,E2_PJ,E3_ASSETS,E3_LIABILITIES,E3_INCOME,E4_EXEC,E4_OPS,E4_FIN,E4_CRITICAL,DOCS_LIST,CRM_INFO,E5_TERMS,E5_FEES,ESCROW_DETAILS,PROCESSING,PROVIDE_INFO action
+    class E1_CHECK,E2_TYPE,DOCS_CHECK,CRM_PAID,E5_SIGN,ESCROW_CHECK,ADD_INFO decision
+    class E1_VALIDATED,E2_VALIDATED,E3_VALIDATED,E4_VALIDATED,CRM_ACTIVATED,E3_CALC,TIMELINE_START success
+    class E1_FAIL,ESCROW_DEAD,E5_EXPIRED danger
+    class E1_RETRY,DOCS_PENDING,CRM_WAIT action
+    class ROADMAP roadmap
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HINT -->
+<div class="hint">Arraste para mover · Scroll para zoom · Botões no topo para controle</div>
+
+<!-- MERMAID CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+
+<script>
+  // ── STATE ──
+  let scale = 1;
+  let panX = 0, panY = 0;
+  let isDragging = false;
+  let startX, startY;
+  const MIN_SCALE = 0.05;
+  const MAX_SCALE = 4;
+  const ZOOM_STEP = 0.15;
+
+  const container = document.getElementById('canvasContainer');
+  const inner = document.getElementById('canvasInner');
+  const zoomDisplay = document.getElementById('zoomLevel');
+
+  // ── INIT MERMAID — curve linear para setas retas e angulares ──
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#D4A843',
+      primaryTextColor: '#1a1a1a',
+      primaryBorderColor: '#B8860B',
+      lineColor: '#333333',
+      secondaryColor: '#f5f0e1',
+      tertiaryColor: '#fff8e7',
+      fontSize: '14px'
+    },
+    flowchart: {
+      useMaxWidth: false,
+      htmlLabels: true,
+      curve: 'linear',
+      diagramPadding: 20,
+      nodeSpacing: 30,
+      rankSpacing: 40
+    },
+    securityLevel: 'loose'
+  });
+
+  // ── AFTER RENDER ──
+  mermaid.run().then(function() {
+    setTimeout(function() {
+      fitToScreen();
+      document.getElementById('loading').classList.add('hidden');
+    }, 800);
+  });
+
+  // ── TRANSFORM ──
+  function applyTransform() {
+    inner.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+    zoomDisplay.textContent = Math.round(scale * 100) + '%';
+  }
+
+  // ── ZOOM ──
+  function zoomIn() {
+    scale = Math.min(MAX_SCALE, scale + ZOOM_STEP);
+    applyTransform();
+  }
+
+  function zoomOut() {
+    scale = Math.max(MIN_SCALE, scale - ZOOM_STEP);
+    applyTransform();
+  }
+
+  function fitToScreen() {
+    var output = document.getElementById('mermaid-output');
+    var svg = output.querySelector('svg');
+    if (!svg) return;
+    var svgW = svg.getBoundingClientRect().width / scale;
+    var svgH = svg.getBoundingClientRect().height / scale;
+    var padW = 64;
+    var padH = 64;
+    var totalW = svgW + padW;
+    var totalH = svgH + padH;
+    var availW = container.clientWidth - 40;
+    var availH = container.clientHeight - 40;
+    scale = Math.min(availW / totalW, availH / totalH, 2);
+    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+    var scaledW = totalW * scale;
+    var scaledH = totalH * scale;
+    panX = (availW - scaledW) / 2 + 20;
+    panY = (availH - scaledH) / 2 + 20;
+    applyTransform();
+  }
+
+  // ── MOUSE DRAG ──
+  container.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+  });
+
+  window.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    applyTransform();
+  });
+
+  window.addEventListener('mouseup', function() { isDragging = false; });
+
+  // ── TOUCH DRAG ──
+  container.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX - panX;
+      startY = e.touches[0].clientY - panY;
+    }
+  }, { passive: true });
+
+  container.addEventListener('touchmove', function(e) {
+    if (!isDragging || e.touches.length !== 1) return;
+    panX = e.touches[0].clientX - startX;
+    panY = e.touches[0].clientY - startY;
+    applyTransform();
+  }, { passive: true });
+
+  container.addEventListener('touchend', function() { isDragging = false; });
+
+  // ── SCROLL ZOOM com ponto focal no cursor ──
+  container.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    var rect = container.getBoundingClientRect();
+    var mouseX = e.clientX - rect.left;
+    var mouseY = e.clientY - rect.top;
+    var prevScale = scale;
+    if (e.deltaY < 0) {
+      scale = Math.min(MAX_SCALE, scale * 1.1);
+    } else {
+      scale = Math.max(MIN_SCALE, scale / 1.1);
+    }
+    var ratio = scale / prevScale;
+    panX = mouseX - ratio * (mouseX - panX);
+    panY = mouseY - ratio * (mouseY - panY);
+    applyTransform();
+  }, { passive: false });
+
+  // ── EXPORT PNG ──
+  function exportPNG() {
+    var svgEl = document.querySelector('#mermaid-output svg');
+    if (!svgEl) { showToast('Erro: diagrama não encontrado.'); return; }
+
+    showToast('Gerando imagem em alta resolução...');
+
+    var svgClone = svgEl.cloneNode(true);
+    svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+    // Embutir fonte genérica para garantir renderização correta
+    var styleEl = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    styleEl.textContent = '* { font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }';
+    svgClone.insertBefore(styleEl, svgClone.firstChild);
+
+    // Garantir que foreignObject tenha background branco
+    var foreignObjects = svgClone.querySelectorAll('foreignObject');
+    foreignObjects.forEach(function(fo) {
+      var divs = fo.querySelectorAll('div');
+      divs.forEach(function(d) {
+        if (!d.style.backgroundColor) {
+          d.style.backgroundColor = 'transparent';
+        }
+      });
+    });
+
+    var svgData = new XMLSerializer().serializeToString(svgClone);
+    var svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    var url = URL.createObjectURL(svgBlob);
+
+    var img = new Image();
+    img.onload = function() {
+      var multiplier = 3;
+      var canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth * multiplier;
+      canvas.height = img.naturalHeight * multiplier;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(multiplier, multiplier);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob(function(blob) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Grammont_Fluxo_Captacao_90-10.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        showToast('✅ Imagem PNG exportada com sucesso!');
+      }, 'image/png');
+    };
+    img.onerror = function() {
+      URL.revokeObjectURL(url);
+      showToast('Erro ao gerar imagem. Tente novamente.');
+    };
+    img.src = url;
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function() { toast.classList.remove('show'); }, 3000);
+  }
+
+  // ── KEYBOARD SHORTCUTS ──
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '+' || e.key === '=') zoomIn();
+    if (e.key === '-') zoomOut();
+    if (e.key === '0') fitToScreen();
+  });
+</script>
+</body>
+</html>
