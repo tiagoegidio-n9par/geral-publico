@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo N9 - Estruturação de Fundos</title>
+    <link rel="stylesheet" href="asset/n9-brand.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        /* ── Usando paleta N9 Brand ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--n9-font-primary);
+            background-color: var(--n9-bg-light);
+            color: var(--n9-accent);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--n9-primary-dark) 0%, var(--n9-primary) 100%);
+            border-bottom: 1px solid var(--n9-primary-dark);
+            padding: 30px 0;
+            text-align: center;
+        }
+        header .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        header .logo-area img {
+            height: 60px;
+        }
+        header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--n9-white);
+            letter-spacing: 2px;
+        }
+        header h1 strong {
+            font-weight: 700;
+        }
+        header p.subtitle {
+            color: var(--n9-gray-light-med);
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* NAV */
+        nav {
+            background: var(--n9-white);
+            border-bottom: 1px solid var(--n9-gray-lighter);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--n9-shadow-sm);
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav a {
+            color: var(--n9-text-light);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        nav a:hover {
+            color: var(--n9-primary);
+            background: var(--n9-bg-light);
+            border-color: var(--n9-gray-lighter);
+        }
+        nav a .nav-number {
+            display: inline-block;
+            background: var(--n9-primary);
+            color: var(--n9-white);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 0.7rem;
+            margin-right: 6px;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 60px;
+            background: var(--n9-white);
+            border-radius: var(--n9-radius-lg);
+            border: 1px solid var(--n9-gray-lighter);
+            overflow: hidden;
+            box-shadow: var(--n9-shadow-sm);
+        }
+        section .section-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--n9-gray-lighter);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        section .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--n9-primary);
+            color: var(--n9-white);
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        section .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--n9-primary);
+        }
+        section .section-header p {
+            font-size: 0.9rem;
+            color: var(--n9-text-light);
+            margin-top: 4px;
+        }
+        section .section-body {
+            padding: 30px;
+        }
+        section .section-body .description {
+            color: var(--n9-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: var(--n9-bg-light);
+            border-radius: var(--n9-radius-md);
+            border-left: 3px solid var(--n9-primary);
+        }
+
+        /* MERMAID */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: var(--n9-bg-light);
+            border-radius: var(--n9-radius-md);
+            padding: 30px 20px;
+            overflow-x: auto;
+        }
+        .mermaid svg {
+            max-width: 100%;
+        }
+
+        /* LEGENDA DE CORES */
+        .color-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .color-legend .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--n9-secondary);
+        }
+        .color-legend .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+        .legend-dot.fidc { background: var(--n9-primary); }
+        .legend-dot.fii { background: #27AE60; }
+        .legend-dot.holding { background: #E74C3C; }
+        .legend-dot.neutro { background: var(--n9-gray-neutral); }
+
+        /* INFO CARDS */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .info-card {
+            background: var(--n9-bg-light);
+            border: 1px solid var(--n9-gray-lighter);
+            border-radius: var(--n9-radius-md);
+            padding: 18px;
+        }
+        .info-card.fidc-card { border-left: 3px solid var(--n9-primary); }
+        .info-card.fii-card { border-left: 3px solid #27AE60; }
+        .info-card h4 {
+            color: var(--n9-primary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .info-card p, .info-card li {
+            color: var(--n9-secondary);
+            font-size: 0.85rem;
+        }
+        .info-card ul {
+            padding-left: 18px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--n9-primary-dark);
+            color: var(--n9-gray-neutral);
+            font-size: 0.8rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.4rem; }
+            nav ul { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; }
+            section .section-body { padding: 20px 15px; }
+            .mermaid { padding: 15px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="Logo_n9_branco.png" alt="Grupo N9" onerror="this.style.display='none'">
+    </div>
+    <h1><strong>Estruturação de Fundos</strong></h1>
+    <p class="subtitle">FLUXO DE PROCESSO &mdash; GRUPO N9</p>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#fluxo"><span class="nav-number">1</span>Fluxo de Estruturação</a></li>
+        <li><a href="#arquitetura"><span class="nav-number">2</span>Arquitetura do Fundo</a></li>
+        <li><a href="#fidc"><span class="nav-number">3</span>FIDC Empresário</a></li>
+        <li><a href="#participantes"><span class="nav-number">4</span>Participantes</a></li>
+        <li><a href="#tipos"><span class="nav-number">5</span>Tipos de Fundos</a></li>
+        <li><a href="#beneficios"><span class="nav-number">6</span>Pilares de Benefícios</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 1: FLUXO DE ESTRUTURAÇÃO — HORIZONTAL             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="fluxo">
+        <div class="section-header">
+            <span class="section-number">1</span>
+            <div>
+                <h2>Fluxo de Estruturação de Fundos</h2>
+                <p>Passo a passo do processo comercial — FIM + FII + FIDC</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                O processo de estruturação segue 8 etapas sequenciais, desde o primeiro contato com sigilo
+                até o acompanhamento contínuo do fundo em operação.
+            </div>
+            <div class="mermaid">
+graph LR
+    A["&lt;b&gt;1. Termo de&lt;br/&gt;Confidencialidade&lt;/b&gt;&lt;br/&gt;&lt;i&gt;NDA — Sigilo&lt;/i&gt;"]
+    B["&lt;b&gt;2. Recebimento da&lt;br/&gt;Documentação&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Patrimonial&lt;/i&gt;"]
+    C["&lt;b&gt;3. Estudo de&lt;br/&gt;Viabilidade&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Econômico-Financeira&lt;/i&gt;"]
+    D["&lt;b&gt;4. Proposta&lt;br/&gt;Comercial&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Customizada&lt;/i&gt;"]
+    E["&lt;b&gt;5. Aprovação&lt;br/&gt;do Cliente&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Aceite Formal&lt;/i&gt;"]
+    F["&lt;b&gt;6. Auditoria &amp;&lt;br/&gt;Due Diligence&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Legal&lt;/i&gt;"]
+    G["&lt;b&gt;7. Estruturação&lt;br/&gt;dos Fundos&lt;/b&gt;&lt;br/&gt;&lt;i&gt;FIM+FII+FIDC&lt;/i&gt;"]
+    H["&lt;b&gt;8. Acompanha-&lt;br/&gt;mento&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Monitoramento&lt;/i&gt;"]
+
+    A --> B --> C --> D --> E --> F --> G --> H
+
+    style A fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style B fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style C fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style D fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style E fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style F fill:#ECF0F1,stroke:#BDC3C7,color:#2C3E50
+    style G fill:#2C3E50,stroke:#1A252F,color:#fff
+    style H fill:#2C3E50,stroke:#1A252F,color:#fff
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Fase Preliminar (1-3)</h4>
+                    <ul>
+                        <li>Assinatura do Termo de Confidencialidade (NDA)</li>
+                        <li>Sigilo bancário e proteção de informações</li>
+                        <li>Coleta de documentação patrimonial e societária</li>
+                        <li>Estudo de viabilidade econômico-financeira</li>
+                        <li>Simulações comparativas (Holding vs Fundo)</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>Fase Comercial (4-5)</h4>
+                    <ul>
+                        <li>Proposta comercial customizada</li>
+                        <li>Definição de custos e taxas de estruturação</li>
+                        <li>Apresentação ao cliente e aprovação formal</li>
+                        <li>Aceite e assinatura do contrato</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>Fase de Execução (6-8)</h4>
+                    <ul>
+                        <li>Due diligence patrimonial e legal</li>
+                        <li>Auditoria independente dos ativos</li>
+                        <li>Estruturação jurídica dos fundos (FIM, FII, FIDC)</li>
+                        <li>Registro na CVM e ANBIMA</li>
+                        <li>Acompanhamento e monitoramento contínuo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 2: ARQUITETURA — Holding vs Fundo                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="arquitetura">
+        <div class="section-header">
+            <span class="section-number">2</span>
+            <div>
+                <h2>Arquitetura do Fundo Exclusivo</h2>
+                <p>Comparativo — Holding Tradicional vs Fundo Exclusivo</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                Comparação entre a estrutura tradicional via Holding/SPE (com tributação pesada) e a
+                estrutura proposta via Fundo Exclusivo (isento de tributos nas operações internas).
+            </div>
+            <div class="color-legend">
+                <div class="legend-item"><span class="legend-dot holding"></span> Holding — Estrutura Tradicional</div>
+                <div class="legend-item"><span class="legend-dot fii"></span> Fundo — Estrutura Proposta</div>
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph HOLDING["&lt;b&gt;❌ Estrutura Tradicional — HOLDING&lt;/b&gt;"]
+        direction TB
+        H_PF["👤 Sócios PF"]
+        H_HOLD["🏢 Holding / SPE&lt;br/&gt;&lt;i&gt;PIS/COFINS: 3,65%&lt;/i&gt;&lt;br/&gt;&lt;i&gt;IR: 4,8% | CSLL: 2,88%&lt;/i&gt;&lt;br/&gt;&lt;i&gt;Total: ~14,53%&lt;/i&gt;"]
+        H_ATIVO["Ativos Imobiliários"]
+        H_PF --> H_HOLD --> H_ATIVO
+    end
+
+    subgraph FUNDO["&lt;b&gt;✅ Estrutura Proposta — FUNDO EXCLUSIVO&lt;/b&gt;"]
+        direction TB
+        F_PF["👤 Cotistas PF"]
+        F_FIM["📦 &lt;b&gt;FIM&lt;/b&gt;&lt;br/&gt;Fundo Multimercado&lt;br/&gt;&lt;i&gt;PIS: 0% | IR: 0% | CSLL: 0%&lt;/i&gt;"]
+        F_FII["🏠 &lt;b&gt;FII&lt;/b&gt;&lt;br/&gt;Fundo Imobiliário"]
+        F_ATIVO["Ativos Imobiliários&lt;br/&gt;&lt;i&gt;Renda Mensal&lt;/i&gt;"]
+        F_FIP["FIDC&lt;br/&gt;&lt;i&gt;Direitos Creditórios&lt;/i&gt;"]
+        F_FIN["Ativos Financeiros&lt;br/&gt;&lt;i&gt;Títulos, CDB, Ações&lt;/i&gt;"]
+
+        F_PF --> F_FIM
+        F_FIM --> F_FII --> F_ATIVO
+        F_FIM -.-> F_FIP
+        F_FIM -.-> F_FIN
+    end
+
+    style HOLDING fill:#FDEDEC,stroke:#E74C3C,color:#922B21
+    style H_PF fill:#F8F9FA,stroke:#BDC3C7,color:#333
+    style H_HOLD fill:#FADBD8,stroke:#E74C3C,color:#922B21
+    style H_ATIVO fill:#F8F9FA,stroke:#BDC3C7,color:#333
+
+    style FUNDO fill:#E8F8F0,stroke:#27AE60,color:#1E8449
+    style F_PF fill:#F8F9FA,stroke:#BDC3C7,color:#333
+    style F_FIM fill:#ECF0F1,stroke:#2C3E50,color:#2C3E50
+    style F_FII fill:#D5F5E3,stroke:#27AE60,color:#1E8449
+    style F_ATIVO fill:#D5F5E3,stroke:#27AE60,color:#1E8449
+    style F_FIP fill:#D4E6F1,stroke:#2C3E50,color:#1A252F
+    style F_FIN fill:#F8F9FA,stroke:#BDC3C7,color:#555
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card" style="border-left: 3px solid #E74C3C;">
+                    <h4>Holding — Tributação</h4>
+                    <ul>
+                        <li>PIS/COFINS: 3,65%</li>
+                        <li>IR: 4,8%</li>
+                        <li>CSLL: 2,88%</li>
+                        <li><strong>Total: ~14,53% sobre receita</strong></li>
+                    </ul>
+                </div>
+                <div class="info-card fii-card">
+                    <h4>Fundo — Economia</h4>
+                    <ul>
+                        <li>Renda R$ 500k/mês</li>
+                        <li>Holding: R$ 871k/ano em impostos</li>
+                        <li>Fundo: R$ 480k/ano (custos operacionais)</li>
+                        <li><strong>Economia: R$ 391k/ano</strong></li>
+                        <li><strong>R$ 4,7MM em 10 anos</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 3: FIDC EMPRESÁRIO                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="fidc">
+        <div class="section-header">
+            <span class="section-number">3</span>
+            <div>
+                <h2>Fluxo FIDC Empresário</h2>
+                <p>Modelo de negócio — Empresário vira "banqueiro" do seu ecossistema</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                O FIDC Empresário permite que o empresário invista no fundo (cota subordinada) enquanto capta
+                recursos do mercado (cota sênior), antecipando recebíveis de fornecedores e clientes com
+                rentabilidade superior ao mercado financeiro.
+            </div>
+            <div class="mermaid">
+graph LR
+    subgraph INV["&lt;b&gt;INVESTIDORES&lt;/b&gt;"]
+        direction TB
+        MKT["💹 &lt;b&gt;Mercado Financeiro&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Investidores Institucionais&lt;/i&gt;"]
+        EMP["👤 &lt;b&gt;Empresário&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Investidor / Cotista&lt;/i&gt;"]
+    end
+
+    subgraph CENTRO["&lt;b&gt;FIDC EMPRESÁRIO&lt;/b&gt;"]
+        direction TB
+        SR["&lt;b&gt;Cota SÊNIOR&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Preferência de resgate&lt;/i&gt;"]
+        SUB["&lt;b&gt;Cota SUBORDINADA&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Absorve perdas primeiro&lt;/i&gt;"]
+    end
+
+    subgraph OPS["&lt;b&gt;ECOSSISTEMA&lt;/b&gt;"]
+        direction TB
+        FORN["📦 &lt;b&gt;Fornecedores&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Cedem recebíveis&lt;/i&gt;&lt;br/&gt;&lt;i&gt;Recebem à vista&lt;/i&gt;"]
+        EMPRESA["🏢 &lt;b&gt;Empresa&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Antecipa recebíveis&lt;/i&gt;&lt;br/&gt;&lt;i&gt;Despesa financeira&lt;/i&gt;"]
+        CLIENTES["🛒 &lt;b&gt;Clientes&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Geram recebíveis&lt;/i&gt;"]
+    end
+
+    MKT -- "Investe" --> SR
+    EMP -- "Investe&lt;br/&gt;&lt;i&gt;risco conhecido&lt;/i&gt;" --> SUB
+
+    SR -- "Paga à vista" --> FORN
+    SUB -- "Antecipa crédito" --> EMPRESA
+
+    FORN -- "Cede recebíveis" --> SR
+    EMPRESA -- "Cede recebíveis&lt;br/&gt;dos clientes" --> SUB
+
+    CLIENTES -- "Geram&lt;br/&gt;recebíveis" --> EMPRESA
+
+    CENTRO -- "Receita&lt;br/&gt;&lt;i&gt;juros da antecipação&lt;/i&gt;" --> EMP
+
+    style INV fill:#F8F9FA,stroke:#BDC3C7,color:#333
+    style CENTRO fill:#D4E6F1,stroke:#2C3E50,color:#1A252F,stroke-width:3px
+    style OPS fill:#F8F9FA,stroke:#BDC3C7,color:#333
+
+    style MKT fill:#ECF0F1,stroke:#6C7A89,color:#2C3E50
+    style EMP fill:#ECF0F1,stroke:#6C7A89,color:#2C3E50
+    style SR fill:#D4E6F1,stroke:#2C3E50,color:#1A252F
+    style SUB fill:#D4E6F1,stroke:#3D5166,color:#1A252F
+    style FORN fill:#ECF0F1,stroke:#BDC3C7,color:#333
+    style EMPRESA fill:#ECF0F1,stroke:#BDC3C7,color:#333
+    style CLIENTES fill:#ECF0F1,stroke:#BDC3C7,color:#333
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card fidc-card">
+                    <h4>Benefícios para o Empresário</h4>
+                    <ul>
+                        <li>Rentabilidade muito superior ao mercado</li>
+                        <li>Risco conhecido (sua própria empresa)</li>
+                        <li>Vira "banqueiro" do ecossistema</li>
+                    </ul>
+                </div>
+                <div class="info-card fidc-card">
+                    <h4>Benefícios para a Empresa</h4>
+                    <ul>
+                        <li>Maximiza fluxo de caixa</li>
+                        <li>Estica prazo para fornecedores</li>
+                        <li>Juros = Despesa Financeira (reduz IRPJ/CSLL)</li>
+                    </ul>
+                </div>
+                <div class="info-card fidc-card">
+                    <h4>Benefícios para Fornecedores</h4>
+                    <ul>
+                        <li>Recebem à vista via FIDC</li>
+                        <li>Alternativa ao crédito bancário caro</li>
+                        <li>Maior previsibilidade</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 4: PARTICIPANTES — BIFURCAÇÃO                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="participantes">
+        <div class="section-header">
+            <span class="section-number">4</span>
+            <div>
+                <h2>Ecossistema de Participantes</h2>
+                <p>Prestadores de serviço obrigatórios e não obrigatórios</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                O Fundo de Investimento exige prestadores obrigatórios regulamentados pela CVM, e pode contar com
+                prestadores adicionais conforme a complexidade da estrutura.
+            </div>
+            <div class="mermaid">
+graph TD
+    FUNDO["&lt;b&gt;🏛️ FUNDO DE INVESTIMENTO&lt;/b&gt;&lt;br/&gt;&lt;i&gt;CNPJ Próprio — Registrado na CVM&lt;/i&gt;"]
+
+    subgraph ESSENC["&lt;b&gt;⭐ Prestadores Essenciais&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Res. CVM 175, Art. 3, XXX&lt;/i&gt;"]
+        ADM["&lt;b&gt;Administrador Fiduciário&lt;/b&gt;&lt;br/&gt;Responsável legal perante CVM"]
+        GESTOR["&lt;b&gt;Gestor de Recursos&lt;/b&gt;&lt;br/&gt;Gestão profissional dos ativos"]
+        ADM --> GESTOR
+    end
+
+    subgraph CONTRAT["&lt;b&gt;✅ Prestadores Contratados&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Res. CVM 175, Art. 83-85&lt;/i&gt;"]
+        CUST["&lt;b&gt;Custodiante&lt;/b&gt;&lt;br/&gt;Guarda e segurança dos ativos"]
+        AUDIT["&lt;b&gt;Auditor Independente&lt;/b&gt;&lt;br/&gt;Auditoria obrigatória"]
+        ESCRIT["&lt;b&gt;Escriturador de Cotas&lt;/b&gt;&lt;br/&gt;Escrituração das cotas"]
+        DISTRIB["&lt;b&gt;Distribuidor&lt;/b&gt;&lt;br/&gt;Distribuição de cotas"]
+        CUST --> AUDIT --> ESCRIT --> DISTRIB
+    end
+
+    subgraph OPCIO["&lt;b&gt;📋 Demais Prestadores&lt;/b&gt;"]
+        LEGAL["Assessor Legal"]
+        IMOB["Consultor Imobiliário"]
+        REPR["Representante de Cotistas"]
+        AVAL["Avaliador"]
+        CTRL["Controladoria"]
+        LEGAL -.-> IMOB -.-> REPR -.-> AVAL -.-> CTRL
+    end
+
+    FUNDO --> ESSENC
+    FUNDO --> CONTRAT
+    FUNDO --> OPCIO
+
+    style FUNDO fill:#2C3E50,stroke:#1A252F,color:#fff
+    style ESSENC fill:#D4E6F1,stroke:#2C3E50,color:#1A252F
+    style CONTRAT fill:#D5F5E3,stroke:#27AE60,color:#1E8449
+    style OPCIO fill:#FDEBD0,stroke:#F39C12,color:#7E5109
+    style ADM fill:#EBF5FB,stroke:#2C3E50,color:#1A252F
+    style GESTOR fill:#EBF5FB,stroke:#2C3E50,color:#1A252F
+    style CUST fill:#E8F8F0,stroke:#27AE60,color:#1E8449
+    style AUDIT fill:#E8F8F0,stroke:#27AE60,color:#1E8449
+    style ESCRIT fill:#E8F8F0,stroke:#27AE60,color:#1E8449
+    style DISTRIB fill:#E8F8F0,stroke:#27AE60,color:#1E8449
+    style LEGAL fill:#FEF9E7,stroke:#F39C12,color:#7E5109
+    style IMOB fill:#FEF9E7,stroke:#F39C12,color:#7E5109
+    style REPR fill:#FEF9E7,stroke:#F39C12,color:#7E5109
+    style AVAL fill:#FEF9E7,stroke:#F39C12,color:#7E5109
+    style CTRL fill:#FEF9E7,stroke:#F39C12,color:#7E5109
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 5: TIPOS DE FUNDOS — MINDMAP                      -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="tipos">
+        <div class="section-header">
+            <span class="section-number">5</span>
+            <div>
+                <h2>Tipos de Fundos Estruturados</h2>
+                <p>FIDC como veículo principal — Mapa de tipos e subtipos</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                Fundos Estruturados são investimentos ligados à economia real. O <strong>FIDC</strong> é o principal veículo de
+                securitização no Brasil e o produto mais versátil do mercado de capitais, seguido pelo FII para ativos imobiliários.
+            </div>
+            <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2C3E50', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1A252F', 'lineColor': '#95A5A6', 'secondaryColor': '#2980B9', 'tertiaryColor': '#27AE60', 'fontFamily': 'Helvetica Neue, Helvetica, Nunito Sans, Arial, sans-serif', 'fontSize': '14px'}}}%%
+mindmap
+    root(("**Fundos<br/>Estruturados**"))
+        **★ FIDC**
+            Recebíveis Comerciais
+            Recebíveis Imobiliários
+            Crédito PJ - CCB
+            Crédito Pessoal - CCB
+            Consignado
+            Financ. Veículos
+            Financ. Agronegócio
+            Distressed e Judiciais
+            Cartão de Crédito
+            Infraestrutura
+            Recebíveis Médicos
+            Recebíveis Educacionais
+        **FII**
+            Imobiliários
+            Renda de Aluguel
+            Compra e Venda
+        **FIP**
+            Participações
+            Private Equity
+            Venture Capital
+        **FIAGRO**
+            Financeiro
+            Direitos Creditórios
+            Imobiliário
+            Participações
+            Não Concentrado
+            Multi-concentrado
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card fidc-card">
+                    <h4>FIDC — Números da Indústria</h4>
+                    <ul>
+                        <li><strong>R$ 250 bi</strong> — PL dos FIDCs</li>
+                        <li><strong>1.471</strong> FIDCs em operação</li>
+                        <li>Crescimento de quase 100% no interesse</li>
+                        <li>Expectativa: <strong>+R$ 1 tri</strong> e <strong>+6.000 FIDCs</strong> em 5 anos</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>Indústria Total de Fundos</h4>
+                    <ul>
+                        <li><strong>R$ 7 tri</strong> — PL da Indústria de Fundos</li>
+                        <li><strong>R$ 4,8 tri</strong> — Operações de Crédito no SFN</li>
+                        <li><strong>16.096</strong> Fundos em operação</li>
+                        <li><strong>11.350</strong> FICs em operação</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- DIAGRAMA 6: 3 PILARES DE BENEFÍCIOS                       -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section id="beneficios">
+        <div class="section-header">
+            <span class="section-number">6</span>
+            <div>
+                <h2>Três Pilares de Benefícios</h2>
+                <p>Proposta de valor do Fundo Exclusivo</p>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="description">
+                O Fundo Exclusivo é uma robusta ferramenta sem equivalente no mercado, combinando três pilares fundamentais
+                que justificam a estruturação.
+            </div>
+            <div class="mermaid">
+graph TB
+    FUNDO["&lt;b&gt;🏛️ FUNDO EXCLUSIVO&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Restrito e Fechado — Resolução CVM nº 175/2022&lt;/i&gt;"]
+
+    subgraph P1["&lt;b&gt;🛡️ PROTEÇÃO PATRIMONIAL&lt;/b&gt;"]
+        P1A["Não vínculo patrimônio&lt;br/&gt;cotista ↔ fundo"]
+        P1B["Sigilo bancário"]
+        P1C["Auditoria externa"]
+        P1D["Portabilidade&lt;br/&gt;entre prestadores"]
+        P1E["Proteção contra&lt;br/&gt;penhora"]
+    end
+
+    subgraph P2["&lt;b&gt;👨‍👩‍👧‍👦 PLANEJAMENTO SUCESSÓRIO&lt;/b&gt;"]
+        P2A["Doação com reversão"]
+        P2B["Incomunicabilidade"]
+        P2C["Usufruto de cotas"]
+        P2D["Transferência de cotas&lt;br/&gt;&lt;i&gt;vs transferência de patrimônio&lt;/i&gt;"]
+    end
+
+    subgraph P3["&lt;b&gt;💰 BENEFÍCIOS FISCAIS&lt;/b&gt;"]
+        P3A["Isenção IR dentro do Fundo"]
+        P3B["Isenção IR entre Fundos"]
+        P3C["Compensação tributária&lt;br/&gt;entre produtos diferentes"]
+        P3D["Sem come-cotas&lt;br/&gt;&lt;i&gt;Fundo Fechado&lt;/i&gt;"]
+        P3E["Amortização /&lt;br/&gt;Desintegralização"]
+    end
+
+    FUNDO --> P1
+    FUNDO --> P2
+    FUNDO --> P3
+
+    style FUNDO fill:#2C3E50,stroke:#1A252F,color:#fff
+    style P1 fill:#D4E6F1,stroke:#2980B9,color:#1A5276
+    style P2 fill:#E8DAEF,stroke:#8E44AD,color:#6C3483
+    style P3 fill:#D5F5E3,stroke:#27AE60,color:#1E8449
+    style P1A fill:#EBF5FB,stroke:#AED6F1,color:#2C3E50
+    style P1B fill:#EBF5FB,stroke:#AED6F1,color:#2C3E50
+    style P1C fill:#EBF5FB,stroke:#AED6F1,color:#2C3E50
+    style P1D fill:#EBF5FB,stroke:#AED6F1,color:#2C3E50
+    style P1E fill:#EBF5FB,stroke:#AED6F1,color:#2C3E50
+    style P2A fill:#F5EEF8,stroke:#D2B4DE,color:#2C3E50
+    style P2B fill:#F5EEF8,stroke:#D2B4DE,color:#2C3E50
+    style P2C fill:#F5EEF8,stroke:#D2B4DE,color:#2C3E50
+    style P2D fill:#F5EEF8,stroke:#D2B4DE,color:#2C3E50
+    style P3A fill:#EAFAF1,stroke:#ABEBC6,color:#2C3E50
+    style P3B fill:#EAFAF1,stroke:#ABEBC6,color:#2C3E50
+    style P3C fill:#EAFAF1,stroke:#ABEBC6,color:#2C3E50
+    style P3D fill:#EAFAF1,stroke:#ABEBC6,color:#2C3E50
+    style P3E fill:#EAFAF1,stroke:#ABEBC6,color:#2C3E50
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Fundo Exclusivo vs Participação Direta</h4>
+                    <ul>
+                        <li>Gestão profissional vs necessidade de experiência</li>
+                        <li>Compensação tributária vs tributação individual</li>
+                        <li>Fundo personalizado vs produtos genéricos</li>
+                        <li>Facilidade de sucessão/doação vs alto custo</li>
+                        <li>Aumento significativo no sigilo vs fragilidade</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h4>Regulamentação</h4>
+                    <ul>
+                        <li><strong>CVM</strong> — Resolução nº 175/2022 (Fundos de Investimento)</li>
+                        <li><strong>ANBIMA</strong> — Código de Administração de Recursos de Terceiros</li>
+                        <li>CNPJ próprio para cada fundo</li>
+                        <li>Sem cobertura FGC nos FIDCs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>Grupo N9 — Estruturação de Fundos &nbsp;|&nbsp; CEO: Tiago Egídio &nbsp;|&nbsp; Documento gerado automaticamente &nbsp;|&nbsp; CONFIDENCIAL</p>
+</footer>
+
+<script>
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+            primaryColor: '#ECF0F1',
+            primaryTextColor: '#2C3E50',
+            primaryBorderColor: '#BDC3C7',
+            lineColor: '#95A5A6',
+            secondaryColor: '#D5F5E3',
+            tertiaryColor: '#FADBD8',
+            fontFamily: 'Helvetica Neue, Helvetica, Nunito Sans, Arial, sans-serif',
+            fontSize: '14px',
+            background: '#F8F9FA',
+            mainBkg: '#ECF0F1',
+            nodeBorder: '#BDC3C7',
+            clusterBkg: '#F8F9FA',
+            clusterBorder: '#BDC3C7',
+            titleColor: '#2C3E50',
+            edgeLabelBackground: '#F8F9FA',
+            nodeTextColor: '#2C3E50'
+        },
+        flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+            curve: 'basis'
+        },
+        mindmap: {
+            useMaxWidth: true
+        }
+    });
+</script>
+
+</body>
+</html>
