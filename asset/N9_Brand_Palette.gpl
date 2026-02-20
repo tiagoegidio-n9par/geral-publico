@@ -1,0 +1,19 @@
+GIMP Palette
+Name: Grupo N9 Brand v1.1
+Columns: 4
+# N9 = Numero 9. Logo: N = corpo do elefante, 9 = cabeca com orelha.
+# Usar PNG transparente. Nunca JPG com fundo solido.
+ 44  62  80	N9 Primary (#2C3E50)
+ 51  51  51	N9 Accent (#333333)
+ 85  85  85	N9 Secondary (#555555)
+127 140 141	N9 Texto Claro (#7F8C8D)
+248 249 250	N9 Fundo Claro (#F8F9FA)
+255 255 255	N9 Branco (#FFFFFF)
+  0   0   0	N9 Preto (#000000)
+ 26  37  47	N9 Primary Dark (#1A252F)
+ 61  81 102	N9 Primary Light (#3D5166)
+108 122 137	N9 Cinza Intermediario (#6C7A89)
+189 195 199	N9 Cinza Claro Med (#BDC3C7)
+213 219 219	N9 Cinza Clarinho (#D5DBDB)
+236 240 241	N9 Fundo Alt (#ECF0F1)
+149 165 166	N9 Cinza Neutro (#95A5A6)

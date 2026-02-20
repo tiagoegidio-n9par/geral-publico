@@ -1,0 +1,218 @@
+/* ═══════════════════════════════════════════════════════
+   GRUPO N9 — Print Stylesheet
+   Otimizado para material gráfico impresso
+   Version 1.1 — Fevereiro 2026
+   ═══════════════════════════════════════════════════════
+
+   CONCEITO: N9 = "Número 9". Na logo, a letra N forma o corpo
+   do elefante e o 9 forma a cabeça com a orelha.
+   LOGO: Sempre usar PNG com fundo transparente para impressão.
+   Nunca usar JPG com fundo sólido (preto ou bege).
+
+   NOTA SOBRE CMYK:
+   CSS não suporta CMYK nativamente. Use as referências CMYK
+   abaixo ao configurar seu software de design (InDesign, Illustrator).
+
+   Referência CMYK da Paleta:
+   ┌─────────────────────┬──────────┬──────────────────────┐
+   │ Cor                 │ Hex      │ CMYK (aprox.)        │
+   ├─────────────────────┼──────────┼──────────────────────┤
+   │ Primary             │ #2C3E50  │ C83 M60 Y42 K35      │
+   │ Accent              │ #333333  │ C0  M0  Y0  K87      │
+   │ Secondary           │ #555555  │ C0  M0  Y0  K67      │
+   │ Texto Claro         │ #7F8C8D  │ C10 M3  Y3  K42      │
+   │ Primary Dark        │ #1A252F  │ C85 M60 Y40 K55      │
+   │ Primary Light       │ #3D5166  │ C65 M45 Y30 K20      │
+   │ Cinza Intermediário │ #6C7A89  │ C22 M10 Y5  K40      │
+   │ Cinza Neutro        │ #95A5A6  │ C12 M4  Y4  K28      │
+   │ Cinza Claro Médio   │ #BDC3C7  │ C5  M2  Y2  K15      │
+   │ Cinza Clarinho      │ #D5DBDB  │ C3  M1  Y1  K8       │
+   │ Fundo Alternativo   │ #ECF0F1  │ C3  M1  Y1  K2       │
+   │ Fundo Claro         │ #F8F9FA  │ C1  M0  Y0  K1       │
+   │ Branco              │ #FFFFFF  │ C0  M0  Y0  K0       │
+   │ Preto               │ #000000  │ C0  M0  Y0  K100     │
+   └─────────────────────┴──────────┴──────────────────────┘
+
+   Pantone (referências aproximadas):
+   • Primary (#2C3E50)  → Pantone 7545 C
+   • Accent (#333333)   → Pantone Black 7 C
+   • Gray Neutral       → Pantone Cool Gray 7 C
+   ═══════════════════════════════════════════════════════ */
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333333;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #2C3E50;
+    page-break-after: avoid;
+  }
+
+  h1 { font-size: 24pt; }
+  h2 { font-size: 18pt; }
+  h3 { font-size: 14pt; }
+  h4 { font-size: 12pt; }
+
+  p { orphans: 3; widows: 3; }
+
+  img { max-width: 100% !important; }
+
+  .n9-no-print { display: none !important; }
+
+  .n9-page-break { page-break-before: always; }
+
+  a { color: #2C3E50; text-decoration: underline; }
+
+  /* Letterhead header */
+  .n9-print-header {
+    border-bottom: 2px solid #2C3E50;
+    padding-bottom: 8pt;
+    margin-bottom: 20pt;
+  }
+
+  /* Letterhead footer */
+  .n9-print-footer {
+    border-top: 1px solid #D5DBDB;
+    padding-top: 6pt;
+    margin-top: 20pt;
+    font-size: 7pt;
+    color: #95A5A6;
+  }
+}
+
+/* ── Business Card (90mm x 50mm) ── */
+.n9-business-card {
+  width: 90mm;
+  height: 50mm;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.n9-business-card-front {
+  background: #FFFFFF;
+  border-top: 3mm solid #2C3E50;
+  padding: 5mm;
+}
+
+.n9-business-card-back {
+  background: #1A252F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Letterhead (A4) ── */
+.n9-letterhead {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 25mm 20mm 20mm 20mm;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 10pt;
+  color: #333333;
+  position: relative;
+}
+
+.n9-letterhead-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 15mm;
+  background: #2C3E50;
+  display: flex;
+  align-items: center;
+  padding: 0 20mm;
+}
+
+.n9-letterhead-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3mm;
+  background: #2C3E50;
+}
+
+/* ── Envelope (DL: 220mm x 110mm) ── */
+.n9-envelope {
+  width: 220mm;
+  height: 110mm;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 9pt;
+  color: #333333;
+  position: relative;
+  border-top: 3mm solid #2C3E50;
+  padding: 10mm 15mm;
+}
+
+/* ── Email Signature ── */
+.n9-email-signature {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 9pt;
+  color: #333333;
+  border-left: 3px solid #2C3E50;
+  padding-left: 12px;
+  line-height: 1.5;
+}
+
+.n9-email-signature .name {
+  font-weight: 700;
+  color: #2C3E50;
+  font-size: 10pt;
+}
+
+.n9-email-signature .title {
+  color: #7F8C8D;
+}
+
+.n9-email-signature .contact {
+  color: #555555;
+  font-size: 8pt;
+  margin-top: 4px;
+}
+
+.n9-email-signature a {
+  color: #2C3E50;
+  text-decoration: none;
+}
+
+/* ── Logo para impressão ── */
+/*
+   IMPORTANTE: Para impressão, SEMPRE usar:
+   - logo_transparent.png (logo completa com texto)
+   - icon_transparent.png (apenas ícone do elefante)
+
+   NUNCA usar:
+   - grupo_N9_final.png (JPEG disfarçado, fundo preto)
+   - grupo_N9_final.jpg (fundo bege sólido)
+   - Logo_n9.png (completamente preto, sem conteúdo visível)
+
+   Tamanhos mínimos:
+   - Logo completa: 30mm largura
+   - Ícone: 12mm largura
+   - Área de proteção: 1x ao redor (x = altura do olho)
+*/
+
+.n9-print-logo {
+  display: inline-block;
+}
+
+.n9-print-logo img {
+  height: auto;
+  /* Mínimo: 30mm para logo completa, 12mm para ícone */
+}
+
+.n9-print-logo--full img  { width: 40mm; }
+.n9-print-logo--md img    { width: 30mm; }  /* Mínimo absoluto */
+.n9-print-logo--icon img  { width: 15mm; }
+.n9-print-logo--icon-min img { width: 12mm; } /* Mínimo absoluto */

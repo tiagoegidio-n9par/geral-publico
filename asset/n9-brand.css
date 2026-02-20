@@ -1,0 +1,373 @@
+/* ═══════════════════════════════════════════════════════
+   GRUPO N9 — Brand Design System
+   CSS Custom Properties & Utility Classes
+   Version 1.1 — Fevereiro 2026
+
+   CONCEITO DA MARCA:
+   O nome N9 vem de "Número 9". A logo é um elefante estilizado
+   onde a letra N forma o corpo e o número 9 forma a cabeça com
+   a orelha. O elefante simboliza força, memória, sabedoria e
+   longevidade — valores centrais do Grupo N9 Participações.
+
+   LOGO:
+   Sempre usar arquivos PNG com fundo transparente.
+   Nunca usar versões JPG com fundo sólido em composições.
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Core Palette ── */
+  --n9-primary:           #2C3E50;
+  --n9-accent:            #333333;
+  --n9-secondary:         #555555;
+  --n9-text-light:        #7F8C8D;
+  --n9-bg-light:          #F8F9FA;
+  --n9-white:             #FFFFFF;
+  --n9-black:             #000000;
+
+  /* ── Extended Palette ── */
+  --n9-primary-dark:      #1A252F;
+  --n9-primary-light:     #3D5166;
+  --n9-gray-mid:          #6C7A89;
+  --n9-gray-light-med:    #BDC3C7;
+  --n9-gray-lighter:      #D5DBDB;
+  --n9-bg-alt:            #ECF0F1;
+  --n9-gray-neutral:      #95A5A6;
+
+  /* ── Semantic ── */
+  --n9-text-heading:      var(--n9-primary);
+  --n9-border:            var(--n9-gray-lighter);
+  --n9-surface:           var(--n9-white);
+  --n9-surface-alt:       var(--n9-bg-light);
+
+  /* ── BI Dashboard ── */
+  --n9-bi-tab-active-bg:       #FFFFFF;
+  --n9-bi-tab-active-text:     #2C3E50;
+  --n9-bi-tab-inactive-bg:     #F8F9FA;
+  --n9-bi-tab-inactive-text:   #7F8C8D;
+  --n9-bi-view-active-bg:      #F8F9FA;
+  --n9-bi-view-active-text:    #2C3E50;
+  --n9-bi-view-inactive-bg:    transparent;
+  --n9-bi-view-inactive-text:  #7F8C8D;
+  --n9-bi-title:               #2C3E50;
+  --n9-bi-tab-bar:             #F8F9FA;
+
+  /* ── Typography ── */
+  --n9-font-primary:    'Helvetica Neue', Helvetica, 'Nunito Sans', Arial, sans-serif;
+  --n9-font-mono:       'SF Mono', 'Fira Code', monospace;
+
+  /* ── Font Sizes ── */
+  --n9-text-xs:   0.75rem;
+  --n9-text-sm:   0.875rem;
+  --n9-text-base: 1rem;
+  --n9-text-lg:   1.125rem;
+  --n9-text-xl:   1.25rem;
+  --n9-text-2xl:  1.5rem;
+  --n9-text-3xl:  1.875rem;
+  --n9-text-4xl:  2.25rem;
+
+  /* ── Spacing ── */
+  --n9-space-1:   0.25rem;
+  --n9-space-2:   0.5rem;
+  --n9-space-3:   0.75rem;
+  --n9-space-4:   1rem;
+  --n9-space-6:   1.5rem;
+  --n9-space-8:   2rem;
+  --n9-space-12:  3rem;
+  --n9-space-16:  4rem;
+
+  /* ── Border Radius ── */
+  --n9-radius-sm:  4px;
+  --n9-radius-md:  8px;
+  --n9-radius-lg:  12px;
+  --n9-radius-xl:  16px;
+
+  /* ── Shadows ── */
+  --n9-shadow-sm:  0 1px 2px rgba(26, 37, 47, 0.06);
+  --n9-shadow-md:  0 4px 12px rgba(26, 37, 47, 0.08);
+  --n9-shadow-lg:  0 8px 24px rgba(26, 37, 47, 0.12);
+}
+
+/* ─── BASE RESET ─── */
+.n9-base {
+  font-family: var(--n9-font-primary);
+  color: var(--n9-accent);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── TYPOGRAPHY ─── */
+.n9-h1 { font-size: var(--n9-text-4xl); font-weight: 700; color: var(--n9-primary); line-height: 1.2; }
+.n9-h2 { font-size: var(--n9-text-3xl); font-weight: 700; color: var(--n9-primary); line-height: 1.25; }
+.n9-h3 { font-size: var(--n9-text-2xl); font-weight: 700; color: var(--n9-accent); line-height: 1.3; }
+.n9-h4 { font-size: var(--n9-text-xl);  font-weight: 600; color: var(--n9-accent); line-height: 1.35; }
+.n9-body    { font-size: var(--n9-text-base); color: var(--n9-secondary); }
+.n9-caption { font-size: var(--n9-text-sm);   color: var(--n9-text-light); }
+.n9-small   { font-size: var(--n9-text-xs);   color: var(--n9-gray-neutral); }
+
+/* ─── COLOR UTILITIES ─── */
+.n9-bg-primary      { background-color: var(--n9-primary); }
+.n9-bg-primary-dark { background-color: var(--n9-primary-dark); }
+.n9-bg-light        { background-color: var(--n9-bg-light); }
+.n9-bg-alt          { background-color: var(--n9-bg-alt); }
+.n9-bg-white        { background-color: var(--n9-white); }
+.n9-bg-black        { background-color: var(--n9-black); }
+
+.n9-text-primary    { color: var(--n9-primary); }
+.n9-text-accent     { color: var(--n9-accent); }
+.n9-text-secondary  { color: var(--n9-secondary); }
+.n9-text-muted      { color: var(--n9-text-light); }
+.n9-text-white      { color: var(--n9-white); }
+
+.n9-border          { border: 1px solid var(--n9-border); }
+.n9-border-strong   { border: 1px solid var(--n9-gray-light-med); }
+
+/* ─── COMPONENTS ─── */
+.n9-card {
+  background: var(--n9-white);
+  border: 1px solid var(--n9-border);
+  border-radius: var(--n9-radius-md);
+  padding: var(--n9-space-6);
+  box-shadow: var(--n9-shadow-sm);
+}
+
+.n9-card:hover {
+  box-shadow: var(--n9-shadow-md);
+  transition: box-shadow 0.2s ease;
+}
+
+.n9-btn-primary {
+  background: var(--n9-primary);
+  color: var(--n9-white);
+  border: none;
+  border-radius: var(--n9-radius-sm);
+  padding: var(--n9-space-2) var(--n9-space-6);
+  font-family: var(--n9-font-primary);
+  font-weight: 600;
+  font-size: var(--n9-text-sm);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.n9-btn-primary:hover {
+  background: var(--n9-primary-dark);
+}
+
+.n9-btn-secondary {
+  background: transparent;
+  color: var(--n9-primary);
+  border: 1px solid var(--n9-primary);
+  border-radius: var(--n9-radius-sm);
+  padding: var(--n9-space-2) var(--n9-space-6);
+  font-family: var(--n9-font-primary);
+  font-weight: 600;
+  font-size: var(--n9-text-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.n9-btn-secondary:hover {
+  background: var(--n9-primary);
+  color: var(--n9-white);
+}
+
+/* ─── BI TAB COMPONENTS ─── */
+.n9-bi-tab-bar {
+  background: var(--n9-bi-tab-bar);
+  display: flex;
+  gap: 0;
+  padding: 0;
+}
+
+.n9-bi-tab {
+  padding: var(--n9-space-2) var(--n9-space-4);
+  font-size: var(--n9-text-sm);
+  font-weight: 400;
+  background: var(--n9-bi-tab-inactive-bg);
+  color: var(--n9-bi-tab-inactive-text);
+  border: none;
+  cursor: pointer;
+}
+
+.n9-bi-tab.active {
+  background: var(--n9-bi-tab-active-bg);
+  color: var(--n9-bi-tab-active-text);
+  font-weight: 600;
+}
+
+.n9-bi-view-tab {
+  padding: var(--n9-space-2) var(--n9-space-4);
+  font-size: var(--n9-text-sm);
+  background: var(--n9-bi-view-inactive-bg);
+  color: var(--n9-bi-view-inactive-text);
+  border: none;
+  cursor: pointer;
+}
+
+.n9-bi-view-tab.active {
+  background: var(--n9-bi-view-active-bg);
+  color: var(--n9-bi-view-active-text);
+  font-weight: 600;
+}
+
+.n9-bi-title {
+  color: var(--n9-bi-title);
+  font-size: var(--n9-text-xl);
+  font-weight: 700;
+}
+
+/* ─── LAYOUT ─── */
+.n9-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--n9-space-6);
+}
+
+.n9-section {
+  padding: var(--n9-space-16) 0;
+}
+
+.n9-divider {
+  border: none;
+  border-top: 1px solid var(--n9-border);
+  margin: var(--n9-space-8) 0;
+}
+
+.n9-divider-strong {
+  border: none;
+  border-top: 2px solid var(--n9-primary);
+  margin: var(--n9-space-8) 0;
+}
+
+/* ─── LOGO ─── */
+.n9-logo {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.n9-logo img {
+  height: auto;
+  /* Logos DEVEM ser PNG transparente — nunca JPG com fundo sólido */
+}
+
+.n9-logo--full  img { width: 160px; }   /* Logo completa (elefante + texto) */
+.n9-logo--md    img { width: 120px; }   /* Tamanho médio */
+.n9-logo--sm    img { width: 80px; }    /* Tamanho pequeno — mínimo digital */
+.n9-logo--icon  img { width: 40px; }    /* Apenas ícone do elefante */
+.n9-logo--favicon img { width: 32px; }  /* Favicon — mínimo absoluto */
+
+/* ─── HEADER / NAVBAR ─── */
+.n9-header {
+  background: var(--n9-primary);
+  color: var(--n9-white);
+  padding: var(--n9-space-3) var(--n9-space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--n9-space-4);
+}
+
+.n9-header-dark {
+  background: var(--n9-primary-dark);
+}
+
+.n9-header-light {
+  background: var(--n9-bg-light);
+  color: var(--n9-primary);
+  border-bottom: 1px solid var(--n9-border);
+}
+
+/* ─── FOOTER ─── */
+.n9-footer {
+  background: var(--n9-primary-dark);
+  color: var(--n9-gray-neutral);
+  padding: var(--n9-space-8) var(--n9-space-6);
+  font-size: var(--n9-text-sm);
+}
+
+.n9-footer a {
+  color: var(--n9-gray-light-med);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.n9-footer a:hover {
+  color: var(--n9-white);
+}
+
+/* ─── BADGE / TAG ─── */
+.n9-badge {
+  display: inline-block;
+  background: var(--n9-primary);
+  color: var(--n9-white);
+  font-size: var(--n9-text-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--n9-radius-sm);
+}
+
+.n9-badge--light {
+  background: var(--n9-bg-light);
+  color: var(--n9-primary);
+  border: 1px solid var(--n9-border);
+}
+
+/* ─── TABLE ─── */
+.n9-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--n9-text-sm);
+}
+
+.n9-table th {
+  background: var(--n9-primary);
+  color: var(--n9-white);
+  font-weight: 600;
+  text-align: left;
+  padding: var(--n9-space-2) var(--n9-space-4);
+}
+
+.n9-table td {
+  padding: var(--n9-space-2) var(--n9-space-4);
+  border-bottom: 1px solid var(--n9-border);
+  color: var(--n9-accent);
+}
+
+.n9-table tr:nth-child(even) td {
+  background: var(--n9-bg-light);
+}
+
+.n9-table tr:hover td {
+  background: var(--n9-bg-alt);
+}
+
+/* ─── INPUT / FORM ─── */
+.n9-input {
+  font-family: var(--n9-font-primary);
+  font-size: var(--n9-text-sm);
+  color: var(--n9-accent);
+  background: var(--n9-white);
+  border: 1px solid var(--n9-gray-light-med);
+  border-radius: var(--n9-radius-sm);
+  padding: var(--n9-space-2) var(--n9-space-3);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.n9-input:focus {
+  outline: none;
+  border-color: var(--n9-primary);
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.12);
+}
+
+.n9-input::placeholder {
+  color: var(--n9-gray-neutral);
+}
+
+/* ─── ALERT / NOTIFICATION ─── */
+.n9-alert {
+  padding: var(--n9-space-3) var(--n9-space-4);
+  border-radius: var(--n9-radius-sm);
+  border-left: 4px solid var(--n9-primary);
+  background: var(--n9-bg-light);
+  color: var(--n9-accent);
+  font-size: var(--n9-text-sm);
+}
