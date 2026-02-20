@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo N9 - Governança Corporativa</title>
+    <link rel="stylesheet" href="asset/n9-brand.css">
+    <link rel="stylesheet" href="asset/n9-header.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--n9-font-primary);
+            background-color: var(--n9-bg-light);
+            color: var(--n9-accent);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-banner {
+            background: linear-gradient(135deg, var(--n9-primary-dark) 0%, var(--n9-primary) 100%);
+            border-bottom: 1px solid var(--n9-primary-dark);
+            padding: 30px 0;
+            text-align: center;
+        }
+        .page-banner .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .page-banner .logo-area img { height: 60px; }
+        .page-banner h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--n9-white);
+            letter-spacing: 2px;
+        }
+        .page-banner h1 strong { font-weight: 700; }
+        .page-banner p.subtitle {
+            color: var(--n9-gray-light-med);
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+            background: var(--n9-white);
+            border-radius: var(--n9-radius-lg);
+            border: 1px solid var(--n9-gray-lighter);
+            overflow: hidden;
+            box-shadow: var(--n9-shadow-sm);
+        }
+        section .section-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--n9-gray-lighter);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        section .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--n9-primary);
+            color: var(--n9-white);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        section h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--n9-primary);
+        }
+        section .section-body { padding: 30px; }
+
+        .placeholder {
+            text-align: center;
+            padding: 80px 30px;
+            color: var(--n9-text-light);
+        }
+        .placeholder .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.4;
+        }
+        .placeholder h3 {
+            font-size: 1.5rem;
+            color: var(--n9-primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .placeholder p {
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--n9-text-light);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--n9-gray-lighter);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ HEADER CORPORATIVO N9 ═══ -->
+    <div class="n9-topbar">
+        <div class="n9-topbar__inner">
+            <a href="index.html" class="n9-topbar__brand">
+                <img src="Logo_n9_branco.png" alt="N9" class="n9-topbar__logo">
+                <span>GRUPO N9</span>
+            </a>
+            <a href="index.html#contato" class="n9-topbar__cta">Fale Conosco</a>
+            <button class="n9-topbar__hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+
+    <nav class="n9-navbar">
+        <div class="n9-navbar__inner">
+            <ul class="n9-navbar__links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
+                <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
+                <li><a href="fluxo-estruturacao-fundos.html">Estruturação de Fundos</a></li>
+                <li><a href="consultoria-estrategica.html">Consultoria Estratégica</a></li>
+                <li><a href="analise-de-mercado.html">Análise de Mercado</a></li>
+                <li><a href="governanca-corporativa.html" class="active">Governança Corporativa</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="n9-mobile-menu">
+        <ul class="n9-mobile-menu__links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
+            <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
+            <li><a href="fluxo-estruturacao-fundos.html">Estruturação de Fundos</a></li>
+            <li><a href="consultoria-estrategica.html">Consultoria Estratégica</a></li>
+            <li><a href="analise-de-mercado.html">Análise de Mercado</a></li>
+            <li><a href="governanca-corporativa.html" class="active">Governança Corporativa</a></li>
+        </ul>
+        <div class="n9-mobile-menu__cta">
+            <a href="index.html#contato">Fale Conosco</a>
+        </div>
+    </div>
+
+    <div class="n9-header-spacer"></div>
+    <!-- ═══ /HEADER ═══ -->
+
+    <div class="page-banner">
+        <div class="logo-area">
+            <img src="Logo_n9_branco.png" alt="Logo N9">
+        </div>
+        <h1><strong>GOVERNANÇA</strong> CORPORATIVA</h1>
+        <p class="subtitle">GRUPO N9 &bull; TRANSPARÊNCIA E EFICIÊNCIA</p>
+    </div>
+
+    <main>
+        <section>
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <h2>Visão Geral</h2>
+            </div>
+            <div class="section-body">
+                <div class="placeholder">
+                    <div class="icon">🏢</div>
+                    <h3>Em Desenvolvimento</h3>
+                    <p>O conteúdo desta seção está sendo elaborado. Aqui serão apresentadas as melhores práticas de governança implementadas nas empresas investidas, garantindo transparência e eficiência operacional.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Grupo N9 &mdash; Governança Corporativa. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="asset/n9-header.js"></script>
+</body>
+</html>
