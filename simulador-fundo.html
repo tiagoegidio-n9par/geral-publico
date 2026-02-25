@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo N9 - Simulador FIDC Empresário</title>
+    <link rel="stylesheet" href="assets/css/n9-brand.css">
+    <link rel="stylesheet" href="assets/css/n9-header.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--n9-font-primary);
+            background-color: var(--n9-bg-light);
+            color: var(--n9-accent);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* PAGE BANNER */
+        .page-banner {
+            background: linear-gradient(135deg, var(--n9-primary-dark) 0%, var(--n9-primary) 100%);
+            border-bottom: 1px solid var(--n9-primary-dark);
+            padding: 30px 0;
+            text-align: center;
+        }
+        .page-banner .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .page-banner .logo-area img { height: 60px; }
+        .page-banner h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--n9-white);
+            letter-spacing: 2px;
+        }
+        .page-banner h1 strong { font-weight: 700; }
+        .page-banner p.subtitle {
+            color: var(--n9-gray-light-med);
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* INPUT FORM */
+        .sim-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            background: var(--n9-white);
+            border: 1px solid var(--n9-gray-lighter);
+            border-radius: var(--n9-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--n9-shadow-sm);
+        }
+        .form-group-header {
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--n9-white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group-header .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+        .fg-empresa .form-group-header { background: var(--n9-primary); }
+        .fg-fundo .form-group-header { background: #27AE60; }
+        .fg-tributos .form-group-header { background: #E74C3C; }
+        .fg-periodo .form-group-header { background: #F39C12; }
+
+        .form-group-body { padding: 15px 20px; }
+
+        .field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 12px;
+        }
+        .field:last-child { border-bottom: none; }
+
+        .field label {
+            font-size: 0.82rem;
+            color: var(--n9-secondary);
+            flex: 1;
+            cursor: help;
+        }
+        .field label .hint {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--n9-text-light);
+            margin-top: 2px;
+        }
+
+        .field input {
+            width: 130px;
+            text-align: right;
+            padding: 6px 10px;
+            border: 1px solid var(--n9-gray-light-med);
+            border-radius: var(--n9-radius-sm);
+            font-family: var(--n9-font-primary);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--n9-primary);
+            background: #EBF5FB;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field input:focus {
+            outline: none;
+            border-color: var(--n9-primary);
+            box-shadow: 0 0 0 3px rgba(44,62,80,0.12);
+        }
+
+        /* SIMULATE BUTTON */
+        .sim-actions {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-simular {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 48px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: var(--n9-radius-md);
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+            transition: all 0.2s;
+        }
+        .btn-simular:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39,174,96,0.4);
+        }
+        .btn-simular:active { transform: translateY(0); }
+
+        /* TABS */
+        .tabs-container {
+            background: var(--n9-white);
+            border: 1px solid var(--n9-gray-lighter);
+            border-radius: var(--n9-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--n9-shadow-md);
+        }
+        .tab-bar {
+            display: flex;
+            background: var(--n9-primary-dark);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 14px 28px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.6);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-family: var(--n9-font-primary);
+        }
+        .tab-btn:hover { color: rgba(255,255,255,0.85); }
+        .tab-btn.active {
+            color: #fff;
+            border-bottom-color: #27AE60;
+            background: rgba(255,255,255,0.05);
+        }
+        .tab-content { display: none; padding: 30px; }
+        .tab-content.active { display: block; }
+
+        /* PROPOSTA TAB */
+        .proposta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .proposta-card {
+            border-radius: var(--n9-radius-md);
+            border: 1px solid var(--n9-gray-lighter);
+            overflow: hidden;
+        }
+        .proposta-card-header {
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+        .proposta-card.sem-fundo .proposta-card-header { background: var(--n9-primary); }
+        .proposta-card.com-fundo .proposta-card-header { background: #27AE60; }
+        .proposta-card-body { padding: 20px; }
+        .proposta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.88rem;
+        }
+        .proposta-item:last-child { border-bottom: none; }
+        .proposta-item .label { color: var(--n9-secondary); }
+        .proposta-item .value { font-weight: 700; color: var(--n9-primary); }
+
+        .economia-destaque {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            border-radius: var(--n9-radius-lg);
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(39,174,96,0.25);
+        }
+        .economia-destaque .titulo {
+            font-size: 1rem;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .economia-destaque .valor-principal {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .economia-destaque .valor-pct {
+            font-size: 1.4rem;
+            font-weight: 700;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* CHARTS */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .chart-box {
+            background: var(--n9-bg-light);
+            border: 1px solid var(--n9-gray-lighter);
+            border-radius: var(--n9-radius-md);
+            padding: 20px;
+        }
+        .chart-box h4 {
+            font-size: 0.9rem;
+            color: var(--n9-primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Bar chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 60px;
+            height: 280px;
+            padding: 20px 20px 40px;
+            position: relative;
+        }
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .bar-fill {
+            width: 90px;
+            border-radius: 8px 8px 0 0;
+            transition: height 0.6s ease;
+            min-height: 4px;
+        }
+        .bar-fill.sem { background: var(--n9-primary); }
+        .bar-fill.com { background: #27AE60; }
+        .bar-label {
+            font-size: 0.82rem;
+            color: var(--n9-secondary);
+            font-weight: 600;
+            text-align: center;
+        }
+        .bar-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--n9-primary);
+            white-space: nowrap;
+        }
+
+        /* Line chart (canvas) */
+        .line-chart-canvas {
+            width: 100%;
+            height: 200px;
+        }
+
+        /* TABLES */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .dre-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+        .dre-table th {
+            background: var(--n9-primary-dark);
+            color: #fff;
+            padding: 10px 12px;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        .dre-table th:first-child {
+            text-align: left;
+            min-width: 240px;
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: var(--n9-primary-dark);
+        }
+        .dre-table th.acum {
+            background: #27AE60;
+        }
+        .dre-table td {
+            padding: 8px 12px;
+            text-align: right;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .dre-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--n9-secondary);
+            position: sticky;
+            left: 0;
+            background: inherit;
+            z-index: 1;
+        }
+        .dre-table tr:nth-child(even) { background: var(--n9-bg-light); }
+        .dre-table tr.row-highlight { background: #D4E6F1 !important; }
+        .dre-table tr.row-highlight td:first-child { font-weight: 700; color: var(--n9-primary); background: #D4E6F1; }
+        .dre-table tr.row-green { background: #D5F5E3 !important; }
+        .dre-table tr.row-green td:first-child { font-weight: 700; color: #27AE60; background: #D5F5E3; }
+        .dre-table tr.row-red { background: #FADBD8 !important; }
+        .dre-table tr.row-red td:first-child { color: #E74C3C; background: #FADBD8; }
+        .dre-table tr.row-orange { background: #FDEBD0 !important; }
+        .dre-table tr.row-orange td:first-child { color: #F39C12; background: #FDEBD0; }
+        .dre-table tr.row-spacer td { border-bottom: none; padding: 4px; }
+
+        /* CONSOLIDADO TABLE */
+        .consol-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .consol-table th {
+            background: var(--n9-primary-dark);
+            color: #fff;
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .consol-table th:first-child { text-align: left; }
+        .consol-table td {
+            padding: 10px 16px;
+            text-align: right;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .consol-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--n9-secondary);
+        }
+        .consol-table tr:nth-child(even) { background: var(--n9-bg-light); }
+        .consol-table tr.row-highlight { background: #D4E6F1 !important; }
+        .consol-table tr.row-highlight td { font-weight: 700; color: var(--n9-primary); }
+        .consol-table tr.row-green { background: #D5F5E3 !important; }
+        .consol-table tr.row-green td { font-weight: 700; color: #1a8c47; }
+        .consol-table tr.row-red td { color: #E74C3C; }
+        .consol-table tr.row-spacer td { border: none; padding: 4px; }
+        .consol-table .positive { color: #27AE60; font-weight: 700; }
+        .consol-table .negative { color: #E74C3C; font-weight: 700; }
+
+        /* FOOTER */
+        footer {
+            background: var(--n9-primary-dark);
+            color: var(--n9-gray-neutral);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            margin-top: 40px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sim-form { grid-template-columns: 1fr; }
+            .proposta-grid { grid-template-columns: 1fr; }
+            .charts-row { grid-template-columns: 1fr; }
+            .field { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .field input { width: 100%; }
+            .economia-destaque .valor-principal { font-size: 1.8rem; }
+            .tab-btn { padding: 12px 18px; font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══ HEADER CORPORATIVO N9 ═══ -->
+<div class="n9-topbar">
+    <div class="n9-topbar__inner">
+        <a href="index.html" class="n9-topbar__brand">
+            <img src="assets/img/Logo_n9_branco.png" alt="N9" class="n9-topbar__logo">
+            <span>GRUPO N9</span>
+        </a>
+        <a href="index.html#contato" class="n9-topbar__cta">Fale Conosco</a>
+        <button class="n9-topbar__hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</div>
+
+<nav class="n9-navbar">
+    <div class="n9-navbar__inner">
+        <ul class="n9-navbar__links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
+            <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
+            <li><a href="fluxo-estruturacao-fundos.html">Estruturação de Fundos</a></li>
+            <li><a href="sucessao-nao-familiar.html">Sucessão Não Familiar</a></li>
+            <li><a href="simulador-fundo.html" class="active">Simulador FIDC</a></li>
+        </ul>
+        <div class="n9-navbar__sections">
+            <button class="n9-navbar__sections-trigger">Resultados</button>
+            <div class="n9-navbar__sections-menu">
+                <a href="#tab-proposta" onclick="switchTab('proposta')"><span class="section-num">1</span> Proposta</a>
+                <a href="#tab-empresa" onclick="switchTab('empresa')"><span class="section-num">2</span> DRE Empresa</a>
+                <a href="#tab-fundo" onclick="switchTab('fundo')"><span class="section-num">3</span> DRE Fundo</a>
+                <a href="#tab-consolidado" onclick="switchTab('consolidado')"><span class="section-num">4</span> Consolidado</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="n9-mobile-menu">
+    <ul class="n9-mobile-menu__links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="simulador-fundo.html" class="active">Simulador FIDC</a></li>
+    </ul>
+    <ul class="n9-mobile-menu__sections">
+        <li><a href="#" onclick="switchTab('proposta')"><span class="section-num">1</span> Proposta</a></li>
+        <li><a href="#" onclick="switchTab('empresa')"><span class="section-num">2</span> DRE Empresa</a></li>
+        <li><a href="#" onclick="switchTab('fundo')"><span class="section-num">3</span> DRE Fundo</a></li>
+        <li><a href="#" onclick="switchTab('consolidado')"><span class="section-num">4</span> Consolidado</a></li>
+    </ul>
+    <ul class="n9-mobile-menu__links">
+        <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
+        <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
+        <li><a href="fluxo-estruturacao-fundos.html">Estruturação de Fundos</a></li>
+        <li><a href="sucessao-nao-familiar.html">Sucessão Não Familiar</a></li>
+    </ul>
+    <div class="n9-mobile-menu__cta">
+        <a href="index.html#contato">Fale Conosco</a>
+    </div>
+</div>
+
+<div class="n9-header-spacer"></div>
+<!-- ═══ /HEADER ═══ -->
+
+<!-- PAGE BANNER -->
+<div class="page-banner">
+    <div class="logo-area">
+        <img src="assets/img/Logo_n9_branco.png" alt="Grupo N9" onerror="this.style.display='none'">
+    </div>
+    <h1>SIMULADOR <strong>FIDC EMPRESÁRIO</strong></h1>
+    <p class="subtitle">Simule a economia tributária com a estruturação de um Fundo FIDC</p>
+</div>
+
+<main>
+
+<!-- ═══ INPUTS ═══ -->
+<div class="sim-form">
+
+    <!-- DADOS DA EMPRESA -->
+    <div class="form-group fg-empresa">
+        <div class="form-group-header">
+            <div class="icon">E</div>
+            DADOS DA EMPRESA
+        </div>
+        <div class="form-group-body">
+            <div class="field">
+                <label>Receita Bruta Mensal<span class="hint">Faturamento mensal da empresa</span></label>
+                <input type="text" id="receita" value="5.000.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Margem de Custo (%)<span class="hint">CMV / Receita (ex: 70%)</span></label>
+                <input type="text" id="margem_custo" value="70,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>Despesas Operacionais Mensais<span class="hint">SG&A, folha, aluguel, etc.</span></label>
+                <input type="text" id="despesas_op" value="750.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Crescimento Receita (% a.m.)<span class="hint">Taxa de crescimento mensal</span></label>
+                <input type="text" id="cresc_receita" value="1,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>Crescimento Custos (% a.m.)<span class="hint">Inflação de custos mensal</span></label>
+                <input type="text" id="cresc_custos" value="0,5" data-type="pct">
+            </div>
+            <div class="field">
+                <label>Crescimento Despesas (% a.m.)<span class="hint">Crescimento mensal das despesas</span></label>
+                <input type="text" id="cresc_despesas" value="0,5" data-type="pct">
+            </div>
+        </div>
+    </div>
+
+    <!-- DADOS DO FUNDO -->
+    <div class="form-group fg-fundo">
+        <div class="form-group-header">
+            <div class="icon">F</div>
+            DADOS DO FUNDO FIDC
+        </div>
+        <div class="form-group-body">
+            <div class="field">
+                <label>Taxa de Desconto (% a.m.)<span class="hint">Taxa na antecipação de recebíveis</span></label>
+                <input type="text" id="taxa_desconto" value="3,5" data-type="pct">
+            </div>
+            <div class="field">
+                <label>PL Inicial do Fundo<span class="hint">Capital inicial (Subordinada + Sênior)</span></label>
+                <input type="text" id="pl_inicial" value="5.000.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Aporte Mensal<span class="hint">Aporte mensal adicional ao fundo</span></label>
+                <input type="text" id="aporte_mensal" value="100.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Taxa Administração (R$/mês)<span class="hint">Administrador Fiduciário</span></label>
+                <input type="text" id="tx_admin" value="15.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Taxa Custódia (R$/mês)<span class="hint">Custodiante</span></label>
+                <input type="text" id="tx_custodia" value="15.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Taxa Gestão (R$/mês)<span class="hint">Gestor de Recursos</span></label>
+                <input type="text" id="tx_gestao" value="20.000" data-type="brl">
+            </div>
+            <div class="field">
+                <label>Despesas Op. Fundo (% receita)<span class="hint">Consultas, tarifas, cartório</span></label>
+                <input type="text" id="desp_op_pct" value="10,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>Receita Investimentos (% PL a.m.)<span class="hint">Rendimento do caixa livre</span></label>
+                <input type="text" id="receita_inv" value="0,5" data-type="pct">
+            </div>
+        </div>
+    </div>
+
+    <!-- TRIBUTAÇÃO -->
+    <div class="form-group fg-tributos">
+        <div class="form-group-header">
+            <div class="icon">T</div>
+            TRIBUTAÇÃO — LUCRO REAL
+        </div>
+        <div class="form-group-body">
+            <div class="field">
+                <label>IRPJ (%)<span class="hint">Alíquota base IRPJ</span></label>
+                <input type="text" id="irpj" value="15,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>IRPJ Adicional (% acima R$20k/mês)<span class="hint">Adicional 10% sobre excedente</span></label>
+                <input type="text" id="irpj_adic" value="10,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>CSLL (%)<span class="hint">Contribuição Social</span></label>
+                <input type="text" id="csll" value="9,0" data-type="pct">
+            </div>
+            <div class="field">
+                <label>PIS/COFINS sobre Receita (%)<span class="hint">Regime não-cumulativo Lucro Real</span></label>
+                <input type="text" id="pis_cofins" value="3,65" data-type="pct">
+            </div>
+        </div>
+    </div>
+
+    <!-- PERÍODO -->
+    <div class="form-group fg-periodo">
+        <div class="form-group-header">
+            <div class="icon">P</div>
+            PERÍODO DE SIMULAÇÃO
+        </div>
+        <div class="form-group-body">
+            <div class="field">
+                <label>Número de Meses<span class="hint">Horizonte da simulação (1-120)</span></label>
+                <input type="number" id="meses" value="12" min="1" max="120" style="text-align:center;">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BOTÃO SIMULAR -->
+<div class="sim-actions">
+    <button class="btn-simular" onclick="simular()">SIMULAR</button>
+</div>
+
+<!-- ═══ RESULTADOS ═══ -->
+<div class="tabs-container" id="resultados">
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('proposta')">Proposta</button>
+        <button class="tab-btn" onclick="switchTab('empresa')">DRE Empresa</button>
+        <button class="tab-btn" onclick="switchTab('fundo')">DRE Fundo FIDC</button>
+        <button class="tab-btn" onclick="switchTab('consolidado')">Consolidado</button>
+    </div>
+
+    <!-- TAB: PROPOSTA -->
+    <div class="tab-content active" id="tab-proposta">
+        <div class="proposta-grid">
+            <div class="proposta-card sem-fundo">
+                <div class="proposta-card-header">SITUAÇÃO ATUAL — SEM FUNDO</div>
+                <div class="proposta-card-body" id="card-sem-fundo"></div>
+            </div>
+            <div class="proposta-card com-fundo">
+                <div class="proposta-card-header">PROPOSTA — COM FUNDO FIDC</div>
+                <div class="proposta-card-body" id="card-com-fundo"></div>
+            </div>
+        </div>
+        <div class="economia-destaque" id="economia-destaque">
+            <div class="titulo">ECONOMIA TOTAL NO PERÍODO</div>
+            <div class="valor-principal" id="economia-valor">R$ 0</div>
+            <div class="valor-pct" id="economia-pct">0,00%</div>
+        </div>
+        <div class="charts-row">
+            <div class="chart-box">
+                <h4>Lucro Líquido: Sem Fundo vs Com Fundo</h4>
+                <div class="bar-chart" id="bar-chart"></div>
+            </div>
+            <div class="chart-box">
+                <h4>Evolução do Patrimônio Líquido do Fundo</h4>
+                <canvas class="line-chart-canvas" id="pl-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: EMPRESA -->
+    <div class="tab-content" id="tab-empresa">
+        <div class="table-wrapper" id="table-empresa"></div>
+    </div>
+
+    <!-- TAB: FUNDO -->
+    <div class="tab-content" id="tab-fundo">
+        <div class="table-wrapper" id="table-fundo"></div>
+    </div>
+
+    <!-- TAB: CONSOLIDADO -->
+    <div class="tab-content" id="tab-consolidado">
+        <div class="table-wrapper" id="table-consolidado"></div>
+    </div>
+</div>
+
+</main>
+
+<footer>
+    <p>Grupo N9 — Simulador FIDC Empresário &nbsp;|&nbsp; CEO: Tiago Egídio &nbsp;|&nbsp; CONFIDENCIAL</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SIMULADOR FIDC EMPRESÁRIO — Lógica de Cálculo
+   Tradução direta do simulador_n9.py
+   ═══════════════════════════════════════════════════════════ */
+
+// ── Formatação ──
+const fmtBRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const fmtBRL2 = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtPct = (v) => (v * 100).toFixed(2).replace('.', ',') + '%';
+const fmtNum = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+// ── Parsing de inputs ──
+function parseBRL(str) {
+    if (typeof str === 'number') return str;
+    return parseFloat(String(str).replace(/\./g, '').replace(',', '.').replace(/[^\d.\-]/g, '')) || 0;
+}
+function parsePct(str) {
+    if (typeof str === 'number') return str;
+    return (parseFloat(String(str).replace(',', '.').replace(/[^\d.\-]/g, '')) || 0) / 100;
+}
+
+// ── Format on blur / focus ──
+function formatInputDisplay(input) {
+    var type = input.dataset.type;
+    var raw = input.value;
+    if (type === 'brl') {
+        var num = parseBRL(raw);
+        input.value = fmtNum.format(num);
+    } else if (type === 'pct') {
+        var num = parseFloat(raw.replace(',', '.').replace(/[^\d.\-]/g, '')) || 0;
+        input.value = num.toFixed(1).replace('.', ',');
+    }
+}
+
+document.querySelectorAll('.field input[data-type]').forEach(function(input) {
+    input.addEventListener('blur', function() { formatInputDisplay(this); });
+});
+
+// ── Leitura dos inputs ──
+function getInputs() {
+    return {
+        receita:        parseBRL(document.getElementById('receita').value),
+        margem_custo:   parsePct(document.getElementById('margem_custo').value),
+        despesas_op:    parseBRL(document.getElementById('despesas_op').value),
+        cresc_receita:  parsePct(document.getElementById('cresc_receita').value),
+        cresc_custos:   parsePct(document.getElementById('cresc_custos').value),
+        cresc_despesas: parsePct(document.getElementById('cresc_despesas').value),
+        taxa_desconto:  parsePct(document.getElementById('taxa_desconto').value),
+        pl_inicial:     parseBRL(document.getElementById('pl_inicial').value),
+        aporte_mensal:  parseBRL(document.getElementById('aporte_mensal').value),
+        tx_admin:       parseBRL(document.getElementById('tx_admin').value),
+        tx_custodia:    parseBRL(document.getElementById('tx_custodia').value),
+        tx_gestao:      parseBRL(document.getElementById('tx_gestao').value),
+        desp_op_pct:    parsePct(document.getElementById('desp_op_pct').value),
+        receita_inv:    parsePct(document.getElementById('receita_inv').value),
+        irpj:           parsePct(document.getElementById('irpj').value),
+        irpj_adic:      parsePct(document.getElementById('irpj_adic').value),
+        csll:           parsePct(document.getElementById('csll').value),
+        pis_cofins:     parsePct(document.getElementById('pis_cofins').value),
+        meses:          parseInt(document.getElementById('meses').value) || 12,
+    };
+}
+
+// ═══════════════════════════════════════════════════════════
+// CÁLCULO PRINCIPAL
+// ═══════════════════════════════════════════════════════════
+function calcular(inp) {
+    var n = inp.meses;
+
+    // ── DRE EMPRESA (por mês) ──
+    var emp = {
+        receita: [], custo: [], lucro_bruto: [],
+        despesas_op: [], pis_cofins: [],
+        desp_financeira: [], rec_financeira: [], resultado_fin: [],
+        lair: [], irpj: [], irpj_adic: [], csll: [], tributos: [], lucro_liq: []
+    };
+
+    for (var i = 0; i < n; i++) {
+        emp.receita[i]       = inp.receita * Math.pow(1 + inp.cresc_receita, i);
+        emp.custo[i]         = emp.receita[i] * inp.margem_custo;
+        emp.lucro_bruto[i]   = emp.receita[i] - emp.custo[i];
+
+        emp.despesas_op[i]   = inp.despesas_op * Math.pow(1 + inp.cresc_despesas, i);
+        emp.pis_cofins[i]    = emp.receita[i] * inp.pis_cofins;
+
+        // CHAVE: Despesa financeira da empresa = Receita do fundo
+        emp.desp_financeira[i] = emp.receita[i] * inp.taxa_desconto;
+        emp.rec_financeira[i]  = 0;
+        emp.resultado_fin[i]   = emp.rec_financeira[i] - emp.desp_financeira[i];
+
+        emp.lair[i] = emp.lucro_bruto[i] - emp.despesas_op[i] - emp.pis_cofins[i] + emp.resultado_fin[i];
+
+        emp.irpj[i]      = Math.max(0, emp.lair[i] * inp.irpj);
+        emp.irpj_adic[i]  = Math.max(0, (emp.lair[i] - 20000) * inp.irpj_adic);
+        emp.csll[i]       = Math.max(0, emp.lair[i] * inp.csll);
+        emp.tributos[i]   = emp.irpj[i] + emp.irpj_adic[i] + emp.csll[i];
+        emp.lucro_liq[i]  = emp.lair[i] - emp.tributos[i];
+    }
+
+    // ── DRE FUNDO (por mês) ──
+    var fundo = {
+        rec_desconto: [], rec_invest: [], receita_total: [],
+        tx_admin: [], tx_custodia: [], tx_gestao: [],
+        desp_op: [], total_desp: [], lucro_liq: [],
+        pl: [], pl_anterior: [], aporte: [], lucro_mes: []
+    };
+
+    for (var i = 0; i < n; i++) {
+        // Receita do fundo = Despesa financeira da empresa (espelho)
+        fundo.rec_desconto[i] = emp.desp_financeira[i];
+
+        // Receita de investimentos = PL anterior * taxa
+        var pl_ant = (i === 0) ? inp.pl_inicial : fundo.pl[i - 1];
+        fundo.rec_invest[i] = pl_ant * inp.receita_inv;
+
+        fundo.receita_total[i] = fundo.rec_desconto[i] + fundo.rec_invest[i];
+
+        // Despesas fixas
+        fundo.tx_admin[i]    = inp.tx_admin;
+        fundo.tx_custodia[i] = inp.tx_custodia;
+        fundo.tx_gestao[i]   = inp.tx_gestao;
+
+        // Despesas operacionais % da receita de desconto
+        fundo.desp_op[i] = fundo.rec_desconto[i] * inp.desp_op_pct;
+
+        fundo.total_desp[i] = fundo.tx_admin[i] + fundo.tx_custodia[i] + fundo.tx_gestao[i] + fundo.desp_op[i];
+
+        fundo.lucro_liq[i] = fundo.receita_total[i] - fundo.total_desp[i];
+
+        // Patrimônio Líquido
+        fundo.pl_anterior[i] = pl_ant;
+        fundo.aporte[i]      = inp.aporte_mensal;
+        fundo.lucro_mes[i]   = fundo.lucro_liq[i];
+        fundo.pl[i]          = pl_ant + inp.aporte_mensal + fundo.lucro_liq[i];
+    }
+
+    // ── CONSOLIDADO ──
+    var sum = function(arr) { return arr.reduce(function(a, b) { return a + b; }, 0); };
+
+    // SEM FUNDO: LAIR = Lucro Bruto - Despesas Op - PIS/COFINS (sem desp financeira)
+    var lair_sf = sum(emp.lucro_bruto) - sum(emp.despesas_op) - sum(emp.pis_cofins);
+    var irpj_sf = Math.max(0, lair_sf * inp.irpj);
+    var irpj_adic_sf = Math.max(0, (lair_sf - 20000 * n) * inp.irpj_adic);
+    var csll_sf = Math.max(0, lair_sf * inp.csll);
+    var tributos_sf = irpj_sf + irpj_adic_sf + csll_sf;
+    var lucro_sf = lair_sf - tributos_sf;
+
+    // COM FUNDO:
+    var lucro_emp_cf = sum(emp.lucro_liq);
+    var lucro_fundo_cf = sum(fundo.lucro_liq);
+    var lucro_cf = lucro_emp_cf + lucro_fundo_cf;
+
+    var economia = lucro_cf - lucro_sf;
+    var economia_pct = lucro_sf !== 0 ? economia / lucro_sf : 0;
+
+    return {
+        inp: inp,
+        emp: emp,
+        fundo: fundo,
+        consol: {
+            receita_total: sum(emp.receita),
+            lucro_bruto: sum(emp.lucro_bruto),
+            desp_financeira: sum(emp.desp_financeira),
+            rec_fundo: sum(fundo.rec_desconto),
+            lair_sf: lair_sf,
+            tributos_sf: tributos_sf,
+            lucro_sf: lucro_sf,
+            lair_cf: sum(emp.lair),
+            tributos_cf: sum(emp.tributos),
+            lucro_emp_cf: lucro_emp_cf,
+            lucro_fundo_cf: lucro_fundo_cf,
+            lucro_cf: lucro_cf,
+            economia: economia,
+            economia_pct: economia_pct,
+            pl_final: fundo.pl[n - 1],
+            pl_inicial: inp.pl_inicial,
+            aportes_total: inp.aporte_mensal * n,
+            receita_fundo: sum(fundo.receita_total),
+        }
+    };
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERIZAÇÃO
+// ═══════════════════════════════════════════════════════════
+
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+    document.getElementById('tab-' + name).classList.add('active');
+    // Ativar botão correspondente
+    document.querySelectorAll('.tab-btn').forEach(function(b) {
+        if (b.textContent.toLowerCase().indexOf(name.substring(0, 4)) !== -1 ||
+            (name === 'proposta' && b.textContent === 'Proposta') ||
+            (name === 'empresa' && b.textContent === 'DRE Empresa') ||
+            (name === 'fundo' && b.textContent === 'DRE Fundo FIDC') ||
+            (name === 'consolidado' && b.textContent === 'Consolidado')) {
+            b.classList.add('active');
+        }
+    });
+}
+
+function renderProposta(r) {
+    var c = r.consol;
+    var inp = r.inp;
+
+    // Card Sem Fundo
+    var html = '';
+    var items = [
+        ['Receita Bruta Mensal', fmtBRL.format(inp.receita)],
+        ['Receita Acumulada (' + inp.meses + ' meses)', fmtBRL.format(c.receita_total)],
+        ['Margem de Custo', fmtPct(inp.margem_custo)],
+        ['Lucro Bruto', fmtBRL.format(c.lucro_bruto)],
+        ['LAIR (sem fundo)', fmtBRL.format(c.lair_sf)],
+        ['Tributos (IR+CSLL)', fmtBRL.format(c.tributos_sf)],
+        ['Lucro Líquido (sem fundo)', fmtBRL.format(c.lucro_sf)],
+    ];
+    items.forEach(function(it) {
+        html += '<div class="proposta-item"><span class="label">' + it[0] + '</span><span class="value">' + it[1] + '</span></div>';
+    });
+    document.getElementById('card-sem-fundo').innerHTML = html;
+
+    // Card Com Fundo
+    html = '';
+    var items2 = [
+        ['Taxa de Desconto (a.m.)', fmtPct(inp.taxa_desconto)],
+        ['PL Inicial', fmtBRL.format(inp.pl_inicial)],
+        ['Aporte Mensal', fmtBRL.format(inp.aporte_mensal)],
+        ['Custos Mensais (Adm+Cust+Gestão)', fmtBRL.format(inp.tx_admin + inp.tx_custodia + inp.tx_gestao)],
+        ['Receita Total do Fundo', fmtBRL.format(c.receita_fundo)],
+        ['Lucro Líquido do Fundo', fmtBRL.format(c.lucro_fundo_cf)],
+        ['PL Final (' + inp.meses + ' meses)', fmtBRL.format(c.pl_final)],
+    ];
+    items2.forEach(function(it) {
+        html += '<div class="proposta-item"><span class="label">' + it[0] + '</span><span class="value">' + it[1] + '</span></div>';
+    });
+    document.getElementById('card-com-fundo').innerHTML = html;
+
+    // Economia destaque
+    document.getElementById('economia-valor').textContent = fmtBRL.format(c.economia);
+    document.getElementById('economia-pct').textContent = fmtPct(c.economia_pct) + ' a mais de lucro';
+
+    // Cor dinâmica: verde se economia positiva, vermelho se negativa
+    var destaque = document.getElementById('economia-destaque');
+    if (c.economia >= 0) {
+        destaque.style.background = 'linear-gradient(135deg, #27AE60 0%, #2ECC71 100%)';
+        destaque.style.boxShadow = '0 4px 20px rgba(39,174,96,0.25)';
+    } else {
+        destaque.style.background = 'linear-gradient(135deg, #E74C3C 0%, #C0392B 100%)';
+        destaque.style.boxShadow = '0 4px 20px rgba(231,76,60,0.25)';
+    }
+}
+
+function renderBarChart(r) {
+    var c = r.consol;
+    var maxVal = Math.max(Math.abs(c.lucro_sf), Math.abs(c.lucro_cf), 1);
+    var maxH = 180;
+    var hSem = Math.max(4, (Math.abs(c.lucro_sf) / maxVal) * maxH);
+    var hCom = Math.max(4, (Math.abs(c.lucro_cf) / maxVal) * maxH);
+
+    var html = '';
+    html += '<div class="bar-item">';
+    html += '<div class="bar-value">' + fmtBRL.format(c.lucro_sf) + '</div>';
+    html += '<div class="bar-fill sem" style="height:' + hSem + 'px"></div>';
+    html += '<div class="bar-label">Sem Fundo</div>';
+    html += '</div>';
+    html += '<div class="bar-item">';
+    html += '<div class="bar-value">' + fmtBRL.format(c.lucro_cf) + '</div>';
+    html += '<div class="bar-fill com" style="height:' + hCom + 'px"></div>';
+    html += '<div class="bar-label">Com Fundo</div>';
+    html += '</div>';
+
+    document.getElementById('bar-chart').innerHTML = html;
+}
+
+function renderPLChart(r) {
+    var canvas = document.getElementById('pl-chart');
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    var W = rect.width;
+    var H = rect.height;
+
+    ctx.clearRect(0, 0, W, H);
+
+    var data = r.fundo.pl;
+    var n = data.length;
+    if (n < 1) return;
+
+    var minV = Math.min.apply(null, data) * 0.95;
+    var maxV = Math.max.apply(null, data) * 1.05;
+    if (maxV === minV) maxV = minV + 1;
+
+    var padL = 80, padR = 20, padT = 20, padB = 40;
+    var chartW = W - padL - padR;
+    var chartH = H - padT - padB;
+
+    // Grid
+    ctx.strokeStyle = '#E0E0E0';
+    ctx.lineWidth = 0.5;
+    for (var g = 0; g <= 4; g++) {
+        var gy = padT + (chartH / 4) * g;
+        ctx.beginPath();
+        ctx.moveTo(padL, gy);
+        ctx.lineTo(W - padR, gy);
+        ctx.stroke();
+        var gVal = maxV - (g / 4) * (maxV - minV);
+        ctx.fillStyle = '#7F8C8D';
+        ctx.font = '10px Helvetica Neue';
+        ctx.textAlign = 'right';
+        ctx.fillText(fmtBRL.format(gVal), padL - 8, gy + 4);
+    }
+
+    // Line
+    ctx.beginPath();
+    ctx.strokeStyle = '#27AE60';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    for (var i = 0; i < n; i++) {
+        var x = padL + (i / Math.max(n - 1, 1)) * chartW;
+        var y = padT + (1 - (data[i] - minV) / (maxV - minV)) * chartH;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Fill gradient
+    ctx.lineTo(padL + chartW, padT + chartH);
+    ctx.lineTo(padL, padT + chartH);
+    ctx.closePath();
+    var grad = ctx.createLinearGradient(0, padT, 0, padT + chartH);
+    grad.addColorStop(0, 'rgba(39,174,96,0.2)');
+    grad.addColorStop(1, 'rgba(39,174,96,0.02)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Dots
+    for (var i = 0; i < n; i++) {
+        var x = padL + (i / Math.max(n - 1, 1)) * chartW;
+        var y = padT + (1 - (data[i] - minV) / (maxV - minV)) * chartH;
+        ctx.beginPath();
+        ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#27AE60';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
+
+    // X labels
+    ctx.fillStyle = '#7F8C8D';
+    ctx.font = '10px Helvetica Neue';
+    ctx.textAlign = 'center';
+    for (var i = 0; i < n; i++) {
+        var x = padL + (i / Math.max(n - 1, 1)) * chartW;
+        ctx.fillText('M' + (i + 1), x, H - padB + 18);
+    }
+}
+
+function renderTabelaEmpresa(r) {
+    var n = r.inp.meses;
+    var e = r.emp;
+    var mLabels = [];
+    var mNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    for (var i = 0; i < n; i++) mLabels.push(n <= 12 ? mNames[i % 12] : 'M' + (i + 1));
+
+    var sum = function(arr) { return arr.reduce(function(a, b) { return a + b; }, 0); };
+
+    var rows = [
+        { label: 'Receita Bruta', data: e.receita, cls: '', acum: sum(e.receita) },
+        { label: 'CMV / Custo', data: e.custo, cls: '', acum: sum(e.custo) },
+        { label: 'LUCRO BRUTO', data: e.lucro_bruto, cls: 'row-highlight', acum: sum(e.lucro_bruto) },
+        { label: '', spacer: true },
+        { label: 'Despesas Operacionais', data: e.despesas_op, cls: '', acum: sum(e.despesas_op) },
+        { label: 'PIS/COFINS (sobre receita)', data: e.pis_cofins, cls: '', acum: sum(e.pis_cofins) },
+        { label: '', spacer: true },
+        { label: 'Despesa Financeira (juros ao FIDC)', data: e.desp_financeira, cls: 'row-orange', acum: sum(e.desp_financeira) },
+        { label: 'Receita Financeira', data: e.rec_financeira, cls: '', acum: sum(e.rec_financeira) },
+        { label: 'RESULTADO FINANCEIRO', data: e.resultado_fin, cls: '', acum: sum(e.resultado_fin) },
+        { label: '', spacer: true },
+        { label: 'LUCRO ANTES DO IR (LAIR)', data: e.lair, cls: 'row-highlight', acum: sum(e.lair) },
+        { label: '', spacer: true },
+        { label: 'IRPJ (15%)', data: e.irpj, cls: 'row-red', acum: sum(e.irpj) },
+        { label: 'IRPJ Adicional (10% s/ excedente R$20k)', data: e.irpj_adic, cls: 'row-red', acum: sum(e.irpj_adic) },
+        { label: 'CSLL (9%)', data: e.csll, cls: 'row-red', acum: sum(e.csll) },
+        { label: 'TOTAL TRIBUTOS', data: e.tributos, cls: 'row-red', acum: sum(e.tributos) },
+        { label: '', spacer: true },
+        { label: 'LUCRO LÍQUIDO', data: e.lucro_liq, cls: 'row-green', acum: sum(e.lucro_liq) },
+    ];
+
+    var html = '<table class="dre-table"><thead><tr><th>DEMONSTRATIVO</th>';
+    for (var i = 0; i < n; i++) html += '<th>' + mLabels[i] + '</th>';
+    html += '<th class="acum">ACUMULADO</th></tr></thead><tbody>';
+
+    rows.forEach(function(row) {
+        if (row.spacer) { html += '<tr class="row-spacer"><td colspan="' + (n + 2) + '"></td></tr>'; return; }
+        html += '<tr class="' + row.cls + '"><td>' + row.label + '</td>';
+        for (var i = 0; i < n; i++) html += '<td>' + fmtBRL.format(row.data[i]) + '</td>';
+        html += '<td style="font-weight:700">' + fmtBRL.format(row.acum) + '</td></tr>';
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('table-empresa').innerHTML = html;
+}
+
+function renderTabelaFundo(r) {
+    var n = r.inp.meses;
+    var f = r.fundo;
+    var mLabels = [];
+    var mNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    for (var i = 0; i < n; i++) mLabels.push(n <= 12 ? mNames[i % 12] : 'M' + (i + 1));
+
+    var sum = function(arr) { return arr.reduce(function(a, b) { return a + b; }, 0); };
+
+    var rows = [
+        { label: 'Receita — Desconto de Recebíveis', data: f.rec_desconto, cls: '', acum: sum(f.rec_desconto) },
+        { label: 'Receita — Investimentos (caixa)', data: f.rec_invest, cls: '', acum: sum(f.rec_invest) },
+        { label: 'RECEITA TOTAL', data: f.receita_total, cls: 'row-highlight', acum: sum(f.receita_total) },
+        { label: '', spacer: true },
+        { label: 'Taxa Administração', data: f.tx_admin, cls: '', acum: sum(f.tx_admin) },
+        { label: 'Taxa Custódia', data: f.tx_custodia, cls: '', acum: sum(f.tx_custodia) },
+        { label: 'Taxa Gestão', data: f.tx_gestao, cls: '', acum: sum(f.tx_gestao) },
+        { label: 'Despesas Operacionais', data: f.desp_op, cls: '', acum: sum(f.desp_op) },
+        { label: 'TOTAL DESPESAS', data: f.total_desp, cls: 'row-orange', acum: sum(f.total_desp) },
+        { label: '', spacer: true },
+        { label: 'LUCRO LÍQUIDO DO FUNDO', data: f.lucro_liq, cls: 'row-green', acum: sum(f.lucro_liq) },
+        { label: '', spacer: true },
+        { label: 'PATRIMÔNIO LÍQUIDO', data: f.pl, cls: 'row-highlight', acum: f.pl[n - 1] },
+        { label: '  PL Anterior', data: f.pl_anterior, cls: '', acum: r.inp.pl_inicial },
+        { label: '  + Aporte Mensal', data: f.aporte, cls: '', acum: sum(f.aporte) },
+        { label: '  + Lucro do Mês', data: f.lucro_mes, cls: '', acum: sum(f.lucro_mes) },
+    ];
+
+    var html = '<table class="dre-table"><thead><tr><th>DEMONSTRATIVO</th>';
+    for (var i = 0; i < n; i++) html += '<th>' + mLabels[i] + '</th>';
+    html += '<th class="acum">ACUMULADO</th></tr></thead><tbody>';
+
+    rows.forEach(function(row) {
+        if (row.spacer) { html += '<tr class="row-spacer"><td colspan="' + (n + 2) + '"></td></tr>'; return; }
+        html += '<tr class="' + row.cls + '"><td>' + row.label + '</td>';
+        for (var i = 0; i < n; i++) html += '<td>' + fmtBRL.format(row.data[i]) + '</td>';
+        html += '<td style="font-weight:700">' + fmtBRL.format(row.acum) + '</td></tr>';
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('table-fundo').innerHTML = html;
+}
+
+function renderConsolidado(r) {
+    var c = r.consol;
+    var n = r.inp.meses;
+
+    var rows = [
+        { label: 'Receita Bruta (' + n + ' meses)', sf: c.receita_total, cf: c.receita_total, cls: '' },
+        { label: 'Lucro Bruto', sf: c.lucro_bruto, cf: c.lucro_bruto, cls: '' },
+        { spacer: true },
+        { label: 'Despesa Financeira (juros)', sf: 0, cf: c.desp_financeira, cls: '' },
+        { label: '  → Que vira Receita no Fundo FIDC', sf: null, cf: c.rec_fundo, cls: '', sfStr: '' },
+        { spacer: true },
+        { label: 'LAIR da Empresa', sf: c.lair_sf, cf: c.lair_cf, cls: 'row-highlight' },
+        { label: 'Tributos da Empresa (IR+CSLL)', sf: c.tributos_sf, cf: c.tributos_cf, cls: '' },
+        { label: 'Lucro Líquido da Empresa', sf: c.lucro_sf, cf: c.lucro_emp_cf, cls: '' },
+        { spacer: true },
+        { label: 'Lucro Líquido do Fundo', sf: 0, cf: c.lucro_fundo_cf, cls: '' },
+        { spacer: true },
+        { label: 'RESULTADO COMBINADO (Empresa + Fundo)', sf: c.lucro_sf, cf: c.lucro_cf, cls: 'row-green' },
+        { spacer: true },
+        { label: 'PL Final do Fundo', sf: null, cf: c.pl_final, cls: '', sfStr: '' },
+        { label: 'PL Inicial', sf: null, cf: c.pl_inicial, cls: '', sfStr: '' },
+        { label: 'Aportes Totais', sf: null, cf: c.aportes_total, cls: '', sfStr: '' },
+        { label: 'Valorização do PL', sf: null, cf: c.pl_final - c.pl_inicial - c.aportes_total, cls: '', sfStr: '' },
+    ];
+
+    var html = '<table class="consol-table"><thead><tr><th>INDICADOR</th><th>SEM FUNDO</th><th>COM FUNDO</th><th>ECONOMIA</th><th>ECONOMIA %</th></tr></thead><tbody>';
+
+    rows.forEach(function(row) {
+        if (row.spacer) { html += '<tr class="row-spacer"><td colspan="5"></td></tr>'; return; }
+        var sf = row.sf;
+        var cf = row.cf;
+        var eco = (sf !== null && cf !== null) ? cf - sf : null;
+        var ecoPct = (sf !== null && sf !== 0 && eco !== null) ? eco / sf : null;
+
+        var sfStr = (row.sfStr !== undefined) ? row.sfStr : (sf !== null ? fmtBRL.format(sf) : '');
+        var cfStr = cf !== null ? fmtBRL.format(cf) : '';
+        var ecoStr = eco !== null ? fmtBRL.format(eco) : '';
+        var ecoPctStr = ecoPct !== null ? fmtPct(ecoPct) : '';
+
+        var ecoClass = (eco !== null && eco > 0) ? ' class="positive"' : (eco !== null && eco < 0) ? ' class="negative"' : '';
+
+        html += '<tr class="' + row.cls + '">';
+        html += '<td>' + row.label + '</td>';
+        html += '<td>' + sfStr + '</td>';
+        html += '<td>' + cfStr + '</td>';
+        html += '<td' + ecoClass + '>' + ecoStr + '</td>';
+        html += '<td' + ecoClass + '>' + ecoPctStr + '</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    document.getElementById('table-consolidado').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MAIN SIMULATION
+// ═══════════════════════════════════════════════════════════
+function simular() {
+    var inp = getInputs();
+    var result = calcular(inp);
+    renderProposta(result);
+    renderBarChart(result);
+    renderPLChart(result);
+    renderTabelaEmpresa(result);
+    renderTabelaFundo(result);
+    renderConsolidado(result);
+}
+
+// Rodar na carga da página
+window.addEventListener('DOMContentLoaded', function() {
+    simular();
+});
+
+// Recalcular ao alterar qualquer input
+document.querySelectorAll('.sim-form input').forEach(function(input) {
+    input.addEventListener('input', function() {
+        simular();
+    });
+});
+
+// Redraw PL chart on resize
+window.addEventListener('resize', function() {
+    var inp = getInputs();
+    var result = calcular(inp);
+    renderPLChart(result);
+});
+</script>
+<script src="assets/js/n9-header.js"></script>
+
+</body>
+</html>

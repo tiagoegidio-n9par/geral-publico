@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grupo N9 - Estruturação de Fundos</title>
-    <link rel="stylesheet" href="asset/n9-brand.css">
-    <link rel="stylesheet" href="asset/n9-header.css">
+    <link rel="stylesheet" href="assets/css/n9-brand.css">
+    <link rel="stylesheet" href="assets/css/n9-header.css">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
         /* ── Usando paleta N9 Brand ── */
@@ -200,7 +200,7 @@
 <div class="n9-topbar">
     <div class="n9-topbar__inner">
         <a href="index.html" class="n9-topbar__brand">
-            <img src="Logo_n9_branco.png" alt="N9" class="n9-topbar__logo">
+            <img src="assets/img/Logo_n9_branco.png" alt="N9" class="n9-topbar__logo">
             <span>GRUPO N9</span>
         </a>
         <a href="index.html#contato" class="n9-topbar__cta">Fale Conosco</a>
@@ -217,9 +217,8 @@
             <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
             <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
             <li><a href="fluxo-estruturacao-fundos.html" class="active">Estruturação de Fundos</a></li>
-            <li><a href="consultoria-estrategica.html">Consultoria Estratégica</a></li>
-            <li><a href="analise-de-mercado.html">Análise de Mercado</a></li>
-            <li><a href="governanca-corporativa.html">Governança Corporativa</a></li>
+            <li><a href="sucessao-nao-familiar.html">Sucessão Não Familiar</a></li>
+            <li><a href="simulador-fundo.html">Simulador FIDC</a></li>
         </ul>
         <div class="n9-navbar__sections">
             <button class="n9-navbar__sections-trigger">Seções</button>
@@ -251,9 +250,8 @@
     <ul class="n9-mobile-menu__links">
         <li><a href="participacoes-societarias.html">Participações Societárias</a></li>
         <li><a href="investimentos-estrategicos.html">Investimentos Estratégicos</a></li>
-        <li><a href="consultoria-estrategica.html">Consultoria Estratégica</a></li>
-        <li><a href="analise-de-mercado.html">Análise de Mercado</a></li>
-        <li><a href="governanca-corporativa.html">Governança Corporativa</a></li>
+        <li><a href="sucessao-nao-familiar.html">Sucessão Não Familiar</a></li>
+        <li><a href="simulador-fundo.html">Simulador FIDC</a></li>
     </ul>
     <div class="n9-mobile-menu__cta">
         <a href="index.html#contato">Fale Conosco</a>
@@ -266,7 +264,7 @@
 <!-- PAGE BANNER -->
 <div class="page-banner">
     <div class="logo-area">
-        <img src="Logo_n9_branco.png" alt="Grupo N9" onerror="this.style.display='none'">
+        <img src="assets/img/Logo_n9_branco.png" alt="Grupo N9" onerror="this.style.display='none'">
     </div>
     <h1><strong>Estruturação de Fundos</strong></h1>
     <p class="subtitle">FLUXO DE PROCESSO &mdash; GRUPO N9</p>
@@ -452,12 +450,14 @@ graph LR
     subgraph INV["&lt;b&gt;INVESTIDORES&lt;/b&gt;"]
         direction TB
         MKT["💹 &lt;b&gt;Mercado Financeiro&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Investidores Institucionais&lt;/i&gt;"]
+        AFF["👥 &lt;b&gt;Amigos e Familiares&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Investidores PF&lt;/i&gt;"]
         EMP["👤 &lt;b&gt;Empresário&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Investidor / Cotista&lt;/i&gt;"]
     end
 
     subgraph CENTRO["&lt;b&gt;FIDC EMPRESÁRIO&lt;/b&gt;"]
         direction TB
         SR["&lt;b&gt;Cota SÊNIOR&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Preferência de resgate&lt;/i&gt;"]
+        MEZZO["&lt;b&gt;Cota MEZANINO&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Risco intermediário&lt;/i&gt;"]
         SUB["&lt;b&gt;Cota SUBORDINADA&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Absorve perdas primeiro&lt;/i&gt;"]
     end
 
@@ -469,25 +469,28 @@ graph LR
     end
 
     MKT -- "Investe" --> SR
+    AFF -- "Investe" --> MEZZO
     EMP -- "Investe&lt;br/&gt;&lt;i&gt;risco conhecido&lt;/i&gt;" --> SUB
 
-    SR -- "Paga à vista" --> FORN
-    SUB -- "Antecipa crédito" --> EMPRESA
+    CENTRO -- "Paga à vista" --> FORN
+    CENTRO -- "Antecipa crédito" --> EMPRESA
 
-    FORN -- "Cede recebíveis" --> SR
-    EMPRESA -- "Cede recebíveis&lt;br/&gt;dos clientes" --> SUB
+    FORN -- "Cede recebíveis" --> CENTRO
+    EMPRESA -- "Cede recebíveis&lt;br/&gt;dos clientes" --> CENTRO
 
     CLIENTES -- "Geram&lt;br/&gt;recebíveis" --> EMPRESA
 
-    CENTRO -- "Receita&lt;br/&gt;&lt;i&gt;juros da antecipação&lt;/i&gt;" --> EMP
+    EMPRESA -- "Receita&lt;br/&gt;&lt;i&gt;juros da antecipação&lt;/i&gt;" --> CENTRO
 
     style INV fill:#F8F9FA,stroke:#BDC3C7,color:#333
     style CENTRO fill:#D4E6F1,stroke:#2C3E50,color:#1A252F,stroke-width:3px
     style OPS fill:#F8F9FA,stroke:#BDC3C7,color:#333
 
     style MKT fill:#ECF0F1,stroke:#6C7A89,color:#2C3E50
+    style AFF fill:#ECF0F1,stroke:#6C7A89,color:#2C3E50
     style EMP fill:#ECF0F1,stroke:#6C7A89,color:#2C3E50
     style SR fill:#D4E6F1,stroke:#2C3E50,color:#1A252F
+    style MEZZO fill:#D4E6F1,stroke:#3D5166,color:#1A252F
     style SUB fill:#D4E6F1,stroke:#3D5166,color:#1A252F
     style FORN fill:#ECF0F1,stroke:#BDC3C7,color:#333
     style EMPRESA fill:#ECF0F1,stroke:#BDC3C7,color:#333
@@ -517,6 +520,14 @@ graph LR
                         <li>Recebem à vista via FIDC</li>
                         <li>Alternativa ao crédito bancário caro</li>
                         <li>Maior previsibilidade</li>
+                    </ul>
+                </div>
+                <div class="info-card fidc-card">
+                    <h4>Cota Mezanino — Amigos e Familiares</h4>
+                    <ul>
+                        <li>Risco intermediário entre Sênior e Subordinada</li>
+                        <li>Acesso a investidores PF próximos ao empresário</li>
+                        <li>Rentabilidade atrativa com proteção parcial</li>
                     </ul>
                 </div>
             </div>
@@ -791,7 +802,7 @@ graph TB
         }
     });
 </script>
-<script src="asset/n9-header.js"></script>
+<script src="assets/js/n9-header.js"></script>
 
 </body>
 </html>
